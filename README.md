@@ -25,6 +25,8 @@ Medicines reconciliation after discharge is a known failure point: the hospital'
 
 The carer can correct any misread row and re-check; the diff recomputes instantly.
 
+![Architecture](docs/architecture.svg)
+
 ## Why this split
 
 | Step | Who | Why |

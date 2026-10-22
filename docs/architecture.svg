@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" font-family="-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="14">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5b6b7b"/></marker>
+  </defs>
+  <rect width="960" height="420" fill="#faf7f2"/>
+  <text x="480" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#1f2a37">Homecoming: three photos in, one pharmacist sheet out</text>
+
+  <!-- inputs -->
+  <g>
+    <rect x="30" y="70" width="150" height="110" rx="12" fill="#fff" stroke="#e6e0d6"/>
+    <text x="105" y="98" text-anchor="middle" font-weight="700" fill="#1f2a37">Three photos</text>
+    <text x="105" y="122" text-anchor="middle" fill="#5b6b7b">discharge letter</text>
+    <text x="105" y="142" text-anchor="middle" fill="#5b6b7b">boxes on the table</text>
+    <text x="105" y="162" text-anchor="middle" fill="#5b6b7b">pill organiser</text>
+  </g>
+
+  <!-- VL -->
+  <g>
+    <rect x="220" y="70" width="190" height="110" rx="12" fill="#e6f4f1" stroke="#0f766e" stroke-width="2"/>
+    <text x="315" y="96" text-anchor="middle" font-weight="700" fill="#0f766e">1. Read</text>
+    <text x="315" y="118" text-anchor="middle" fill="#1f2a37">NVIDIA Nemotron 3.5 Super VL</text>
+    <text x="315" y="138" text-anchor="middle" fill="#5b6b7b">strict JSON per photo</text>
+    <text x="315" y="158" text-anchor="middle" fill="#5b6b7b">name, strength, action, grid cell</text>
+  </g>
+
+  <!-- normalise -->
+  <g>
+    <rect x="450" y="70" width="190" height="110" rx="12" fill="#fff" stroke="#1f2a37" stroke-width="2"/>
+    <text x="545" y="96" text-anchor="middle" font-weight="700" fill="#1f2a37">2. Normalise</text>
+    <text x="545" y="118" text-anchor="middle" fill="#1f2a37">RxNorm (NIH database)</text>
+    <text x="545" y="138" text-anchor="middle" fill="#5b6b7b">brand to active ingredient</text>
+    <text x="545" y="158" text-anchor="middle" fill="#5b6b7b">Tavily leaflet fallback for UK brands</text>
+  </g>
+
+  <!-- diff -->
+  <g>
+    <rect x="680" y="70" width="250" height="110" rx="12" fill="#fff" stroke="#1f2a37" stroke-width="2"/>
+    <text x="805" y="96" text-anchor="middle" font-weight="700" fill="#1f2a37">3. Compare (plain code, tested)</text>
+    <text x="805" y="118" text-anchor="middle" fill="#5b6b7b">stopped but present, dose changed,</text>
+    <text x="805" y="138" text-anchor="middle" fill="#5b6b7b">new but not found, two brands,</text>
+    <text x="805" y="158" text-anchor="middle" fill="#5b6b7b">organiser holds stopped, letter contradicts itself</text>
+  </g>
+
+  <!-- Ultra -->
+  <g>
+    <rect x="680" y="230" width="250" height="100" rx="12" fill="#e6f4f1" stroke="#0f766e" stroke-width="2"/>
+    <text x="805" y="256" text-anchor="middle" font-weight="700" fill="#0f766e">4. Explain and audit the letter</text>
+    <text x="805" y="278" text-anchor="middle" fill="#1f2a37">NVIDIA Nemotron 3 Ultra</text>
+    <text x="805" y="298" text-anchor="middle" fill="#5b6b7b">once per run, text only</text>
+    <text x="805" y="316" text-anchor="middle" fill="#5b6b7b">one pharmacist question per card</text>
+  </g>
+
+  <!-- Lightning -->
+  <g>
+    <rect x="400" y="230" width="230" height="100" rx="12" fill="#e6f4f1" stroke="#0f766e" stroke-width="2"/>
+    <text x="515" y="256" text-anchor="middle" font-weight="700" fill="#0f766e">5. Guard every sentence</text>
+    <text x="515" y="278" text-anchor="middle" fill="#1f2a37">regex blocklist + Nemotron 3.5 Lightning</text>
+    <text x="515" y="298" text-anchor="middle" fill="#5b6b7b">no start / stop / take / change</text>
+    <text x="515" y="316" text-anchor="middle" fill="#5b6b7b">anything else becomes a question</text>
+  </g>
+
+  <!-- output -->
+  <g>
+    <rect x="130" y="230" width="220" height="100" rx="12" fill="#fff" stroke="#e6e0d6"/>
+    <text x="240" y="256" text-anchor="middle" font-weight="700" fill="#1f2a37">6. Hand over</text>
+    <text x="240" y="278" text-anchor="middle" fill="#5b6b7b">cards outlined on the photo</text>
+    <text x="240" y="298" text-anchor="middle" fill="#5b6b7b">editable rows, re-check</text>
+    <text x="240" y="316" text-anchor="middle" fill="#5b6b7b">printable sheet, 7-day share link</text>
+  </g>
+
+  <!-- arrows -->
+  <g stroke="#5b6b7b" stroke-width="2" fill="none" marker-end="url(#a)">
+    <path d="M180 125H218"/><path d="M410 125H448"/><path d="M640 125H678"/>
+    <path d="M805 180V228"/><path d="M680 280H632"/><path d="M400 280H352"/>
+  </g>
+
+  <text x="480" y="380" text-anchor="middle" fill="#1f2a37">All model calls go to <tspan font-weight="700">Nebius Token Factory</tspan>. A per-run cost meter is built from each response's usage field: a kitchen costs a few cents.</text>
+  <text x="480" y="402" text-anchor="middle" fill="#5b6b7b">No model does the matching or the arithmetic. Nothing is stored. Not medical advice.</text>
+</svg>
