@@ -1,0 +1,13 @@
+[project]
+name = "homecoming"
+version = "0.1.0"
+description = "Discharge letter vs the medicines in the house: questions for the pharmacist, never advice."
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = ["fastapi[standard]>=0.115", "modal>=1.5", "pillow>=10"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "homecoming-local", "runtimeExecutable": "uv", "runtimeArgs": ["run", "--python", "3.12", "--with", "fastapi[standard]", "--no-project", "python", "local.py"], "port": 8787 }
+  ]
+}

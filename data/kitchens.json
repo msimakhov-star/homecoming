@@ -1,0 +1,51 @@
+{
+  "_note": "Synthetic demo kitchens. Fictional patient, fictional hospital, fictional brand names on boxes. 'expected' is ground truth for the diff engine; 'cell' is where scripts/make_samples.py draws each box on a 3x3 grid.",
+  "kitchens": [
+    {
+      "name": "Kitchen 1: a stop, a dose change, a new medicine and two brands",
+      "letter": [
+        { "name": "Amlodipine 5 mg", "ingredient": "amlodipine", "strength": "5 mg", "action": "stopped", "dose": "was: one tablet daily" },
+        { "name": "Ramipril 5 mg", "ingredient": "ramipril", "strength": "5 mg", "action": "changed", "dose": "one capsule daily (was 2.5 mg)" },
+        { "name": "Bisoprolol 2.5 mg", "ingredient": "bisoprolol", "strength": "2.5 mg", "action": "new", "dose": "one tablet each morning" },
+        { "name": "Atorvastatin 20 mg", "ingredient": "atorvastatin", "strength": "20 mg", "action": "continued", "dose": "one tablet at night" }
+      ],
+      "house": [
+        { "id": "b1", "name": "Amlodipine 5 mg", "brand": "Amlodipine", "generic_printed": "amlodipine besilate", "ingredient": "amlodipine", "strength": "5 mg", "location": "house", "cell": 1 },
+        { "id": "b2", "name": "Ramipril 2.5 mg", "brand": "Ramipril", "generic_printed": "ramipril capsules", "ingredient": "ramipril", "strength": "2.5 mg", "location": "house", "cell": 2 },
+        { "id": "b3", "name": "Atorvatab 20 mg", "brand": "Atorvatab", "generic_printed": "atorvastatin", "ingredient": "atorvastatin", "strength": "20 mg", "location": "house", "cell": 3 },
+        { "id": "b4", "name": "Atorvastatin 20 mg", "brand": "Atorvastatin", "generic_printed": "atorvastatin calcium", "ingredient": "atorvastatin", "strength": "20 mg", "location": "house", "cell": 4 },
+        { "id": "b5", "name": "Paracetamol 500 mg", "brand": "Paracetamol", "generic_printed": "paracetamol", "ingredient": "acetaminophen", "strength": "500 mg", "location": "house", "cell": 5 },
+        { "id": "o1", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "5 mg", "location": "organiser", "slot": "Mon AM", "cell": 1, "pill_colour": "white" },
+        { "id": "o2", "name": "Atorvastatin", "ingredient": "atorvastatin", "strength": "20 mg", "location": "organiser", "slot": "Mon PM", "cell": 7, "pill_colour": "#f3e3a0" }
+      ],
+      "expected": ["STOPPED_BUT_PRESENT", "ORGANISER_CONTAINS_STOPPED", "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT", "NEW_BUT_NOT_FOUND", "SAME_INGREDIENT_TWO_BRANDS", "UNMATCHED_ITEM"]
+    },
+    {
+      "name": "Kitchen 2: the letter contradicts itself",
+      "letter": [
+        { "name": "Furosemide 40 mg", "ingredient": "furosemide", "strength": "40 mg", "action": "stopped", "dose": "was: one tablet each morning" },
+        { "name": "Furosemide 40 mg", "ingredient": "furosemide", "strength": "40 mg", "action": "continued", "dose": "one tablet each morning" },
+        { "name": "Omeprazole 20 mg", "ingredient": "omeprazole", "strength": "20 mg", "action": "new", "dose": "one capsule daily" }
+      ],
+      "house": [
+        { "id": "b1", "name": "Furosemide 40 mg", "brand": "Furosemide", "generic_printed": "furosemide tablets", "ingredient": "furosemide", "strength": "40 mg", "location": "house", "cell": 1 },
+        { "id": "b2", "name": "Omeprazole 20 mg", "brand": "Omeprazole", "generic_printed": "omeprazole capsules", "ingredient": "omeprazole", "strength": "20 mg", "location": "house", "cell": 2 },
+        { "id": "b3", "name": "Gastrizol 20 mg", "brand": "Gastrizol", "generic_printed": "omeprazole", "ingredient": "omeprazole", "strength": "20 mg", "location": "house", "cell": 3 }
+      ],
+      "expected": ["LETTER_CONTRADICTION", "SAME_INGREDIENT_TWO_BRANDS"]
+    },
+    {
+      "name": "Kitchen 3: everything matches",
+      "letter": [
+        { "name": "Metformin 500 mg", "ingredient": "metformin", "strength": "500 mg", "action": "continued", "dose": "one tablet twice daily" },
+        { "name": "Lansoprazole 30 mg", "ingredient": "lansoprazole", "strength": "30 mg", "action": "new", "dose": "one capsule each morning" }
+      ],
+      "house": [
+        { "id": "b1", "name": "Metformin 500 mg", "brand": "Metformin", "generic_printed": "metformin hydrochloride", "ingredient": "metformin", "strength": "500 mg", "location": "house", "cell": 1 },
+        { "id": "b2", "name": "Lansoprazole 30 mg", "brand": "Lansoprazole", "generic_printed": "lansoprazole capsules", "ingredient": "lansoprazole", "strength": "0.03 g", "location": "house", "cell": 2 },
+        { "id": "o1", "name": "Metformin", "ingredient": "metformin", "strength": "500 mg", "location": "organiser", "slot": "Mon AM", "cell": 1, "pill_colour": "white" }
+      ],
+      "expected": []
+    }
+  ]
+}

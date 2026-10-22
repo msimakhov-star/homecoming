@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Homecoming</title>
+<meta name="description" content="The weekend after a hospital discharge: photograph the letter, the boxes and the pill organiser, and see where they disagree. Questions for the pharmacist, never advice.">
+<link rel="stylesheet" href="/static/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Cpath d='M18 36l14-14 14 14v12H18z' fill='%23fff'/%3E%3Crect x='28' y='38' width='8' height='10' fill='%230f766e'/%3E%3C/svg%3E">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/" aria-label="Homecoming home">
+    <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#0f766e"/><path d="M18 36l14-14 14 14v12H18z" fill="#fff"/><rect x="28" y="38" width="8" height="10" fill="#0f766e"/></svg>
+    <span>Homecoming</span>
+  </a>
+  <span id="mode-chip" class="chip" title="Whether the models are being called live">checking…</span>
+</header>
+
+<main id="app">
+  <section class="hero">
+    <h1>The weekend after discharge.</h1>
+    <p class="lede">Dad came home from hospital with a letter that stops one medicine, changes another and adds a third. The kitchen still holds the old boxes. The GP is closed until Monday.</p>
+    <p class="lede">Photograph the letter, the boxes and the pill organiser. Homecoming shows exactly where the house disagrees with the hospital and turns each disagreement into a question for your pharmacist.</p>
+    <p class="notice"><strong>It never tells you what to take.</strong> Nothing is stored. Demo data is synthetic. Not medical advice.</p>
+  </section>
+
+  <section class="capture" aria-labelledby="capture-h">
+    <h2 id="capture-h"><span class="step">1</span> Three photos</h2>
+    <div class="tiles">
+      <label class="tile" for="f-letter">
+        <span class="tile-title">The discharge letter</span>
+        <span class="tile-sub">Every page that lists medicines</span>
+        <input id="f-letter" type="file" accept="image/*" capture="environment" multiple data-group="letter">
+        <div class="thumbs" data-thumbs="letter"></div>
+      </label>
+      <label class="tile" for="f-boxes">
+        <span class="tile-title">The boxes</span>
+        <span class="tile-sub">Spread everything on the table, one wide shot, close-ups if small</span>
+        <input id="f-boxes" type="file" accept="image/*" capture="environment" multiple data-group="boxes">
+        <div class="thumbs" data-thumbs="boxes"></div>
+      </label>
+      <label class="tile" for="f-organiser">
+        <span class="tile-title">The pill organiser</span>
+        <span class="tile-sub">Lid open. Optional.</span>
+        <input id="f-organiser" type="file" accept="image/*" capture="environment" multiple data-group="organiser">
+        <div class="thumbs" data-thumbs="organiser"></div>
+      </label>
+    </div>
+    <div class="samples">
+      <span>No kitchen to hand? Try a sample:</span>
+      <div id="sample-list" class="sample-list" role="group" aria-label="Sample kitchens"></div>
+    </div>
+    <button id="run" class="primary" type="button">Check the kitchen</button>
+    <p id="run-hint" class="hint">Needs at least the letter and one photo of the boxes, or a sample.</p>
+  </section>
+
+  <section id="progress" class="progress" hidden aria-live="polite">
+    <h2><span class="step">2</span> Reading</h2>
+    <ol id="rail" class="rail"></ol>
+  </section>
+
+  <section id="results" hidden>
+    <div id="banner" class="banner" hidden></div>
+
+    <h2><span class="step">3</span> Where the house disagrees with the hospital</h2>
+    <p id="no-cards" class="allclear" hidden>Nothing disagrees. The letter, the boxes and the organiser all line up.</p>
+    <div id="cards" class="cards"></div>
+
+    <div id="audit-wrap" hidden>
+      <h3>The letter itself</h3>
+      <ul id="audit" class="audit"></ul>
+    </div>
+
+    <h2><span class="step">4</span> What was read <small>tap any row to correct it</small></h2>
+    <div class="columns">
+      <div class="col"><h3>Hospital says</h3><ul id="col-hospital" class="rows"></ul></div>
+      <div class="col"><h3>In the house</h3><ul id="col-house" class="rows"></ul></div>
+      <div class="col"><h3>In the organiser</h3><ul id="col-organiser" class="rows"></ul></div>
+    </div>
+    <button id="recheck" class="secondary" type="button" hidden>Re-check with my corrections</button>
+
+    <h2><span class="step">5</span> Ask</h2>
+    <form id="ask-form" class="ask">
+      <input id="ask-input" type="text" placeholder="e.g. should he stop taking it?" maxlength="300" autocomplete="off">
+      <button class="secondary" type="submit">Ask</button>
+    </form>
+    <p id="ask-answer" class="answer" hidden></p>
+
+    <div class="actions">
+      <button id="print" class="primary" type="button">Print the pharmacist sheet</button>
+      <button id="share" class="secondary" type="button">Share with family</button>
+      <span id="share-link" class="share-link" hidden></span>
+    </div>
+
+    <details class="cost">
+      <summary>This kitchen cost <strong id="cost-total">$0.00</strong> on Nebius Token Factory</summary>
+      <table id="cost-table"><thead><tr><th>Step</th><th>Model</th><th>In</th><th>Out</th><th>ms</th><th>USD</th></tr></thead><tbody></tbody></table>
+    </details>
+  </section>
+
+  <section id="sheet" class="sheet" hidden></section>
+</main>
+
+<footer class="foot">
+  <p>Built with <strong>NVIDIA Nemotron 3.5 Super VL</strong> (reads the photos), <strong>Nemotron 3 Ultra</strong> (audits the letter, writes the questions) and <strong>Nemotron 3.5 Lightning</strong> (checks every sentence), all on <strong>Nebius Token Factory</strong>. Ingredient names from RxNorm; leaflets via Tavily. The matching is plain code: no model does the arithmetic.</p>
+  <p>Homecoming is a hackathon project. It is not a medical device and gives no medical advice. Always speak to a pharmacist or doctor.</p>
+</footer>
+
+<div id="toast" class="toast" role="status" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
