@@ -110,3 +110,21 @@ def test_video_walkthrough_falls_back_to_frames_and_dedupes(monkeypatch):
     names = [r["name_as_printed"] for r in res["rows"]["boxes"]]
     assert len(names) == len(set(names)) == 5, names          # merged across frames
     assert sorted({c["type"] for c in res["cards"]}) == sorted(K["expected"])
+
+
+def test_rescan_reads_one_close_up(monkeypatch):
+    from fastapi.testclient import TestClient
+    from homecoming import server
+    srv = HTTPServer(("127.0.0.1", 0), Fake)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    monkeypatch.setattr(llm, "BASE_URL", f"http://127.0.0.1:{srv.server_port}/v1")
+    monkeypatch.setenv("NEBIUS_API_KEY", "test")
+    try:
+        c = TestClient(server.build({}, ROOT / "web", ROOT / "data" / "samples"))
+        img = (ROOT / "data/samples/kitchen0-boxes.png").read_bytes()
+        r = c.post("/api/rescan", data={"group": "boxes"}, files={"image": ("b.png", img, "image/png")})
+    finally:
+        srv.shutdown()
+    assert r.status_code == 200 and r.json()["item"]["name_as_printed"]
+    monkeypatch.delenv("NEBIUS_API_KEY")
+    assert c.post("/api/rescan", data={"group": "boxes"}, files={"image": ("b.png", img, "image/png")}).status_code == 409

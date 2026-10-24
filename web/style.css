@@ -101,6 +101,8 @@ button:focus-visible, input:focus-visible { outline: 3px solid color-mix(in srgb
 .rows li.flash { background: var(--warn-bg); }
 .rows .action { font-size: .75rem; grid-column: 2 / 4; color: var(--muted); }
 .rows .action select { width: auto; color: var(--muted); }
+.rows .unsure { font-size: .75rem; color: var(--warn); grid-column: 2 / 4; }
+.rows .rescan { text-decoration: underline; cursor: pointer; font-weight: 600; }
 .rows .unconfirmed { font-size: .72rem; color: var(--warn); grid-column: 2 / 4; }
 #recheck { margin-top: 10px; }
 

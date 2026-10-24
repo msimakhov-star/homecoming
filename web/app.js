@@ -228,6 +228,8 @@ function renderColumns(res) {
       ${g === 'letter' ? `<span class="action">letter says <select class="act">${act.map(a => `<option ${a === r.action ? 'selected' : ''}>${a}</option>`).join('')}</select></span>` : ''}
       ${g === 'organiser' ? `<span class="action">slot: <input class="slot" value="${esc(r.slot || '')}" aria-label="slot" style="width:6rem"></span>` : ''}
       ${res.sources[r.id] && res.sources[r.id].confirmed === false ? `<span class="unconfirmed">ingredient not confirmed: read as “${esc(res.sources[r.id].ingredient)}”</span>` : ''}
+      ${r.confidence && r.confidence !== 'high' ? `<span class="unsure">Not sure I read this right.
+        <label class="rescan">Photograph it closer<input type="file" accept="image/*" capture="environment" data-rescan="${esc(r.id)}" data-group="${g}" hidden></label></span>` : ''}
     </li>`;
   $('#col-hospital').innerHTML = res.rows.letter.map(r => row(r, 'letter')).join('') || '<li>nothing read</li>';
   $('#col-house').innerHTML = res.rows.boxes.map(r => row(r, 'boxes')).join('') || '<li>nothing read</li>';
@@ -238,6 +240,23 @@ document.addEventListener('click', e => {
   const b = e.target.closest('[data-ref]'); if (!b) return;
   const li = document.querySelector(`.rows li[data-id="${b.dataset.ref}"]`); if (!li) return;
   li.scrollIntoView({ behavior: 'smooth', block: 'center' }); li.classList.add('flash'); setTimeout(() => li.classList.remove('flash'), 1600);
+});
+
+document.addEventListener('change', async e => {
+  const inp = e.target.closest('input[data-rescan]'); if (!inp || !inp.files[0]) return;
+  const li = inp.closest('li'), g = inp.dataset.group, id = inp.dataset.rescan;
+  const fd = new FormData(); fd.append('group', g); fd.append('image', inp.files[0]);
+  li.classList.add('flash'); toast('Reading the close-up…');
+  try {
+    const r = await fetch('/api/rescan', { method: 'POST', body: fd });
+    const body = await r.json();
+    if (!r.ok) throw new Error(body.detail || `HTTP ${r.status}`);
+    const row = state.rows[g].find(x => x.id === id);
+    Object.assign(row, body.item, { confidence: body.item.confidence || 'high' });
+    $('.name', li).value = row.name_as_printed; $('.strength', li).value = row.strength || '';
+    $('#recheck').click();
+  } catch (err) { toast(err.message, 5000); }
+  li.classList.remove('flash');
 });
 
 $('#recheck').addEventListener('click', async () => {

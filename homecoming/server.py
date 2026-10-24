@@ -184,6 +184,30 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
         return StreamingResponse(events(), media_type="text/event-stream",
                                  headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
+    @api.post("/api/rescan")
+    async def rescan(request: Request, group: str = Form(...), image: UploadFile = File(...)):
+        """Active perception: the carer re-photographs one item the model was unsure about; read just that item."""
+        if group not in pipeline.GROUPS:
+            raise HTTPException(400, "unknown group")
+        data = await image.read()
+        if len(data) > MAX_IMAGE_BYTES:
+            raise HTTPException(413, "photo must be under 6 MB")
+        tf = TokenFactory(meter=Meter())
+        if not tf.live or throttle(request):
+            raise HTTPException(409, "reading a close-up needs the live models, which are not available right now")
+        try:
+            rows = await asyncio.to_thread(pipeline.extract, tf, group, [(data, image.content_type or "image/jpeg")])
+        except Exception as e:
+            raise HTTPException(502, f"could not read the close-up ({type(e).__name__})")
+        finally:
+            record_spend(tf.meter.total_usd)
+        if not rows:
+            raise HTTPException(422, "nothing readable in that photo; try closer, with more light")
+        rank = {"high": 0, "medium": 1, "low": 2}
+        best = sorted(rows, key=lambda r: rank.get(r.get("confidence"), 3))[0]
+        return {"item": {k: best.get(k) for k in ("name_as_printed", "generic_as_printed", "strength", "action", "slot", "confidence")},
+                "cost": tf.meter.summary()}
+
     @api.post("/api/reconcile")
     def reconcile(request: Request, body: dict):
         """Re-run everything after extraction with rows the carer has edited."""
