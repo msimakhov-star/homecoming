@@ -29,7 +29,8 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
     api = FastAPI(title="Homecoming")
 
     def client_ip(req: Request) -> str:
-        return (req.headers.get("x-forwarded-for") or (req.client.host if req.client else "?")).split(",")[0].strip()
+        # rightmost hop is the one the platform proxy appended; leftmost entries are client-controlled
+        return (req.headers.get("x-forwarded-for") or (req.client.host if req.client else "?")).split(",")[-1].strip()
 
     def throttle(req: Request) -> str | None:
         """Returns a reason string if this request must fall back to recorded mode."""
@@ -77,9 +78,15 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
         norm = Normaliser(cache=KV())
         kitchens = pipeline.load_kitchens()
         if sample is not None:
-            k = kitchens[sample] if 0 <= sample < len(kitchens) else kitchens[0]
-            res = pipeline.run(kitchen=k, tf=tf, norm=norm)  # Ultra/Lightning run live on the fixture if a key exists
-            record_spend(res["cost"]["total_usd"])
+            idx = sample if 0 <= sample < len(kitchens) else 0
+            k = kitchens[idx]
+            # Ultra/Lightning run live on the fixture once per deploy, then the result is cached for everyone
+            res = state.get(f"sample:{idx}:{tf.live}") if tf.live else None
+            if res is None:
+                res = pipeline.run(kitchen=k, tf=tf if not throttle(request) else TokenFactory(api_key=None), norm=norm)
+                record_spend(res["cost"]["total_usd"])
+                if tf.live and res["cost"]["total_usd"] > 0:
+                    state[f"sample:{idx}:{tf.live}"] = res
             res["recorded"] = True
             res["reason"] = "sample kitchen, the photos were not re-read"
             res["sample_images"] = {g: f"/samples/{kitchens.index(k)}/{g}.png" for g in pipeline.GROUPS}
@@ -114,9 +121,9 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
         return res
 
     @api.post("/api/reconcile")
-    def reconcile(body: dict):
+    def reconcile(request: Request, body: dict):
         """Re-run everything after extraction with rows the carer has edited."""
-        tf = TokenFactory(meter=Meter())
+        tf = TokenFactory(meter=Meter()) if not throttle(request) else TokenFactory(api_key=None)
         rows = {g: [r for r in body.get("rows", {}).get(g, []) if isinstance(r, dict)][:40] for g in pipeline.GROUPS}
         res = pipeline.finish(rows, tf, Normaliser(cache=KV()), recorded=not tf.live)
         record_spend(res["cost"]["total_usd"])
@@ -132,8 +139,13 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
         return res
 
     @api.post("/api/share")
-    def share(body: dict):
-        sid = secrets.token_urlsafe(8)
+    def share(request: Request, body: dict):
+        import json as _json
+        if len(_json.dumps(body.get("sheet"))) > 20_000:
+            raise HTTPException(413, "sheet too large")
+        if throttle(request) == "the demo's hourly limit for your connection is reached":
+            raise HTTPException(429, "too many links this hour")
+        sid = secrets.token_urlsafe(12)
         state[f"share:{sid}"] = {"sheet": body.get("sheet"), "created": time.time()}
         return {"id": sid, "url": f"/s/{sid}"}
 
