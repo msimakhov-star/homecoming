@@ -12,7 +12,7 @@ import modal
 ROOT = Path(__file__).parent
 app = modal.App("homecoming")
 image = (modal.Image.debian_slim(python_version="3.12")
-         .pip_install("fastapi[standard]>=0.115")
+         .pip_install("fastapi[standard]>=0.115", "pillow>=10")
          .add_local_dir(ROOT / "homecoming", remote_path="/root/homecoming")
          .add_local_dir(ROOT / "web", remote_path="/root/web")
          .add_local_dir(ROOT / "data", remote_path="/root/data"))

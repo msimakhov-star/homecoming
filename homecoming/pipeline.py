@@ -11,7 +11,7 @@ from pathlib import Path
 from .diff import Discrepancy, HouseItem, LetterItem, fallback_question, headline, label, reconcile
 from .guard import guard
 from .llm import MODELS, Meter, TokenFactory, image_part
-from .normalise import Normaliser
+from .normalise import Normaliser, base_name
 from .prompts import EXTRACT_PROMPTS, EXTRACT_SCHEMA, INTERPRET_SCHEMA, INTERPRET_SYSTEM, ASK_SYSTEM
 
 DATA = Path(__file__).resolve().parent.parent / "data"
@@ -81,8 +81,10 @@ def _resolve(r: dict, norm: Normaliser) -> dict:
         if res["confirmed"]:
             return res
     res = norm.resolve(r["name_as_printed"])
-    if not res["confirmed"] and generic:
-        return {"ingredient": generic.lower(), "confirmed": False, "source": "printed-generic", "url": None}
+    if not res["confirmed"]:
+        # nothing confirmed it: fall back to the printed generic (else the product name) with salts and forms removed
+        return {"ingredient": base_name(generic or r["name_as_printed"]), "confirmed": False,
+                "source": "printed-generic" if generic else "printed", "url": None}
     return res
 
 

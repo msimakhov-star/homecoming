@@ -35,3 +35,12 @@ def test_strength_units_normalise():
     assert strength_key("2.5mg") != strength_key("5 mg")
     assert strength_key("1 puff") == "1 puff"
     assert strength_key(None) is None
+
+
+def test_base_name_strips_salts_forms_and_strengths():
+    from homecoming.normalise import base_name
+    assert base_name("Amlodipine besilate 5 mg tablets") == "amlodipine"
+    assert base_name("Omeprazole 20mg gastro-resistant capsules") == "omeprazole"
+    assert base_name("Bisoprolol fumarate 2.5mg film coated tablets") == "bisoprolol"
+    assert base_name("Co-codamol 30/500 effervescent") == "co-codamol"
+    assert base_name("Metformin hydrochloride") == "metformin"

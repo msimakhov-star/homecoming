@@ -32,6 +32,26 @@ UK_TO_US = {
 }
 
 
+# Salt and form words that do not change which medicine it is ("amlodipine besilate" is amlodipine).
+_SALTS = ("besilate besylate mesilate mesylate maleate hydrochloride hcl dihydrochloride hydrobromide sodium potassium "
+          "calcium magnesium tartrate succinate fumarate citrate sulfate sulphate phosphate acetate bromide chloride "
+          "monohydrate dihydrate trihydrate hemihydrate anhydrous").split()
+_FORMS = ("tablet tablets tab tabs capsule capsules cap caps film-coated film coated gastro-resistant dispersible "
+          "orodispersible soluble effervescent chewable oral solution suspension liquid syrup modified-release "
+          "gastro-resistant enteric-coated delayed-release coated film "
+          "prolonged-release extended-release mr sr xl la cr er").split()
+
+
+def base_name(printed: str) -> str:
+    """Deterministic last resort when no database confirms an ingredient: lower case, drop strengths, pack
+    sizes, dosage forms and salt names. 'Amlodipine besilate 5 mg tablets' -> 'amlodipine'."""
+    t = printed.lower()
+    t = re.sub(r"\d+(?:[.,]\d+)?\s*(?:mg|g|mcg|µg|microgram|micrograms|ml|%|x)?\b", " ", t)
+    t = re.sub(r"[^a-z\- ]", " ", t)
+    words = [w.strip("-") for w in t.split() if w.strip("-") not in _SALTS and w.strip("-") not in _FORMS and w.strip("-")]
+    return " ".join(words).strip() or printed.strip().lower()
+
+
 def rxnorm_ingredients(printed: str) -> list[str]:
     """Strict: every word of the printed name (4+ letters) must appear in the RxNorm concept we matched,
     otherwise return []. approximateTerm alone maps 'Co-codamol' to 'carbon monoxide'; that must never pass."""
