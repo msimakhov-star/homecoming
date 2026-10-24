@@ -24,10 +24,14 @@
     <p class="lede">Dad came home from hospital with a letter that stops one medicine, changes another and adds a third. The kitchen still holds the old boxes. The GP is closed until Monday.</p>
     <p class="lede">Photograph the letter, the boxes and the pill organiser. Homecoming shows exactly where the house disagrees with the hospital and turns each disagreement into a question for your pharmacist.</p>
     <p class="notice"><strong>It never tells you what to take.</strong> Nothing is stored. Demo data is synthetic. Not medical advice.</p>
+    <div class="quick">
+      <span>Try it now with a sample kitchen:</span>
+      <div id="sample-list" class="sample-list" role="group" aria-label="Sample kitchens"></div>
+    </div>
   </section>
 
   <section class="capture" aria-labelledby="capture-h">
-    <h2 id="capture-h"><span class="step">1</span> Three photos</h2>
+    <h2 id="capture-h"><span class="step">1</span> Or photograph your own kitchen</h2>
     <div class="tiles">
       <label class="tile" for="f-letter">
         <span class="tile-title">The discharge letter</span>
@@ -47,10 +51,6 @@
         <input id="f-organiser" type="file" accept="image/*" capture="environment" multiple data-group="organiser">
         <div class="thumbs" data-thumbs="organiser"></div>
       </label>
-    </div>
-    <div class="samples">
-      <span>No kitchen to hand? Try a sample:</span>
-      <div id="sample-list" class="sample-list" role="group" aria-label="Sample kitchens"></div>
     </div>
     <button id="run" class="primary" type="button">Check the kitchen</button>
     <p id="run-hint" class="hint">Needs at least the letter and one photo of the boxes, or a sample.</p>

@@ -39,6 +39,7 @@ async function loadSamples() {
     state.sample = s.index;
     for (const g of ['letter', 'boxes', 'organiser']) { state.files[g] = []; state.photos[g] = [s.images[g]]; renderThumbs(g); }
     syncSamples();
+    $('#run').click();
   });
 }
 function syncSamples() {
@@ -53,12 +54,13 @@ $('#run').addEventListener('click', async () => {
   else for (const g of ['letter', 'boxes', 'organiser']) state.files[g].forEach(f => fd.append(g, f, f.name));
   startRail(); $('#run').disabled = true; $('#results').hidden = true;
   try {
-    const r = await fetch('/api/run', { method: 'POST', body: fd });
+    const ctrl = new AbortController(); const tmo = setTimeout(() => ctrl.abort(), 150000);
+    const r = await fetch('/api/run', { method: 'POST', body: fd, signal: ctrl.signal }).finally(() => clearTimeout(tmo));
     if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
     const res = await r.json();
     if (res.sample_images) for (const g in res.sample_images) state.photos[g] = [res.sample_images[g]];
     finishRail(); render(res);
-  } catch (e) { finishRail(false); toast('Could not check the kitchen: ' + e.message, 6000); }
+  } catch (e) { finishRail(false); toast(e.name === 'AbortError' ? 'That took too long. Please try again, or try a sample kitchen.' : 'Could not check the kitchen: ' + e.message, 6000); }
   $('#run').disabled = false;
 });
 

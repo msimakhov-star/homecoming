@@ -51,9 +51,24 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
         def get(self, k): return state.get(k)
         def __setitem__(self, k, v): state[k] = v
 
+    import hashlib
+    _ver = hashlib.sha1(b"".join((web_dir / f).read_bytes() for f in ("app.js", "style.css"))).hexdigest()[:10]
+
+    def page() -> str:  # stamp static URLs with a content hash so a redeploy never serves stale JS/CSS
+        return (web_dir / "index.html").read_text().replace("/static/app.js", f"/static/app.js?v={_ver}").replace("/static/style.css", f"/static/style.css?v={_ver}")
+
+    @api.middleware("http")
+    async def cache_headers(request: Request, call_next):
+        resp = await call_next(request)
+        if request.url.path.startswith("/static/"):
+            resp.headers["Cache-Control"] = "public, max-age=31536000, immutable" if request.url.query else "no-cache"
+        elif request.url.path == "/" or request.url.path.startswith("/s/"):
+            resp.headers["Cache-Control"] = "no-cache"
+        return resp
+
     @api.get("/", response_class=HTMLResponse)
     def index():
-        return (web_dir / "index.html").read_text()
+        return page()
 
     @api.get("/api/health")
     def health():
@@ -158,7 +173,7 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
 
     @api.get("/s/{sid}", response_class=HTMLResponse)
     def share_page(sid: str):
-        return (web_dir / "index.html").read_text()
+        return page()
 
     api.mount("/static", StaticFiles(directory=str(web_dir)), name="static")
     return api

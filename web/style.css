@@ -39,9 +39,10 @@ p { margin: .4em 0; }
 .tile-sub { display: block; color: var(--muted); font-size: .85rem; min-height: 2.6em; }
 .thumbs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; min-height: 8px; }
 .thumbs img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); }
+.quick { margin-top: 1rem; padding: .8rem .9rem; border-radius: var(--radius); background: var(--card); box-shadow: var(--shadow); display: grid; gap: .5rem; font-weight: 600; }
 .samples { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0; color: var(--muted); font-size: .92rem; }
 .sample-list { display: flex; flex-wrap: wrap; gap: 6px; }
-.sample-list button { font-size: .85rem; padding: .35rem .7rem; }
+.sample-list button { font-size: .9rem; padding: .5rem .8rem; text-align: left; }
 .sample-list button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .hint { color: var(--muted); font-size: .85rem; }
 
