@@ -1,0 +1,2566 @@
+{
+ "seed": 7,
+ "kitchens": [
+  {
+   "name": "Eval kitchen 00",
+   "letter": [
+    {
+     "name": "Clopidogrel 75 mg",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Simvastatin 40 mg",
+     "ingredient": "simvastatin",
+     "strength": "40 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Levothyroxine 25 micrograms",
+     "ingredient": "levothyroxine",
+     "strength": "25 micrograms",
+     "action": "new"
+    },
+    {
+     "name": "Ramipril 1.25 mg",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Bisoprolol 10 mg",
+     "ingredient": "bisoprolol",
+     "strength": "10 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Atorvastatin 10 mg",
+     "ingredient": "atorvastatin",
+     "strength": "10 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Atorvastatin 10 mg",
+     "ingredient": "atorvastatin",
+     "strength": "10 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Clopidogrel 75 mg",
+     "brand": "Clopidogrel",
+     "generic_printed": "clopidogrel hydrogen sulfate",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "o1",
+     "name": "Clopidogrel",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "location": "organiser",
+     "slot": "Mon AM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Simvastatin 20 mg",
+     "brand": "Simvastatin",
+     "generic_printed": "simvastatin",
+     "ingredient": "simvastatin",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 4
+    },
+    {
+     "id": "b4",
+     "name": "Levothyroxine 25 micrograms",
+     "brand": "Levothyroxine",
+     "generic_printed": "levothyroxine sodium",
+     "ingredient": "levothyroxine",
+     "strength": "25 micrograms",
+     "location": "house",
+     "cell": 9
+    },
+    {
+     "id": "b5",
+     "name": "Ramipril 1.25 mg",
+     "brand": "Ramipril",
+     "generic_printed": "ramipril",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 7
+    },
+    {
+     "id": "b6",
+     "name": "Ramitec 1.25 mg",
+     "brand": "Ramitec",
+     "generic_printed": "ramipril",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "b7",
+     "name": "Bisoprolol 10 mg",
+     "brand": "Bisoprolol",
+     "generic_printed": "bisoprolol fumarate",
+     "ingredient": "bisoprolol",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 5
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "LETTER_CONTRADICTION",
+    "ORGANISER_CONTAINS_STOPPED",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "clean"
+  },
+  {
+   "name": "Eval kitchen 01",
+   "letter": [
+    {
+     "name": "Doxazosin 1 mg",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Sertraline 50 mg",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Clopidogrel 75 mg",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "action": "new"
+    },
+    {
+     "name": "Amitriptyline 10 mg",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Tamsulosin 400 micrograms",
+     "ingredient": "tamsulosin",
+     "strength": "400 micrograms",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Doxazosin 1 mg",
+     "brand": "Doxazosin",
+     "generic_printed": "doxazosin mesilate",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "location": "house",
+     "cell": 4
+    },
+    {
+     "id": "b2",
+     "name": "Sertraline 100 mg",
+     "brand": "Sertraline",
+     "generic_printed": "sertraline hydrochloride",
+     "ingredient": "sertraline",
+     "strength": "100 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b3",
+     "name": "Amitriptyline 10 mg",
+     "brand": "Amitriptyline",
+     "generic_printed": "amitriptyline hydrochloride",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 6
+    },
+    {
+     "id": "b4",
+     "name": "Amitrin 10 mg",
+     "brand": "Amitrin",
+     "generic_printed": "amitriptyline",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "b5",
+     "name": "Tamsulosin 400 micrograms",
+     "brand": "Tamsulosin",
+     "generic_printed": "tamsulosin hydrochloride",
+     "ingredient": "tamsulosin",
+     "strength": "400 micrograms",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b6",
+     "name": "Bendroflumethiazide 2.5 mg",
+     "brand": "Bendroflumethiazide",
+     "generic_printed": "bendroflumethiazide",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "location": "house",
+     "cell": 8
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "NEW_BUT_NOT_FOUND",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "mild"
+  },
+  {
+   "name": "Eval kitchen 02",
+   "letter": [
+    {
+     "name": "Bendroflumethiazide 2.5 mg",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Tamsulosin 400 micrograms",
+     "ingredient": "tamsulosin",
+     "strength": "400 micrograms",
+     "action": "new"
+    },
+    {
+     "name": "Amitriptyline 10 mg",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Paracetamol 500 mg",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Bendroflumethiazide 2.5 mg",
+     "brand": "Bendroflumethiazide",
+     "generic_printed": "bendroflumethiazide",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b2",
+     "name": "Amitriptyline 10 mg",
+     "brand": "Amitriptyline",
+     "generic_printed": "amitriptyline hydrochloride",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "b3",
+     "name": "Amitrin 10 mg",
+     "brand": "Amitrin",
+     "generic_printed": "amitriptyline",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b4",
+     "name": "Paracetamol 500 mg",
+     "brand": "Paracetamol",
+     "generic_printed": "paracetamol",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 2
+    }
+   ],
+   "expected": [
+    "NEW_BUT_NOT_FOUND",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "harsh"
+  },
+  {
+   "name": "Eval kitchen 03",
+   "letter": [
+    {
+     "name": "Gabapentin 100 mg",
+     "ingredient": "gabapentin",
+     "strength": "100 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Metformin 500 mg",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "action": "new"
+    },
+    {
+     "name": "Furosemide 20 mg",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Bendroflumethiazide 2.5 mg",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Gabapentin 100 mg",
+     "brand": "Gabapentin",
+     "generic_printed": "gabapentin",
+     "ingredient": "gabapentin",
+     "strength": "100 mg",
+     "location": "house",
+     "cell": 7
+    },
+    {
+     "id": "b2",
+     "name": "Metformin 500 mg",
+     "brand": "Metformin",
+     "generic_printed": "metformin hydrochloride",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 6
+    },
+    {
+     "id": "b3",
+     "name": "Furosemide 20 mg",
+     "brand": "Furosemide",
+     "generic_printed": "furosemide",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "b4",
+     "name": "Bendroflumethiazide 2.5 mg",
+     "brand": "Bendroflumethiazide",
+     "generic_printed": "bendroflumethiazide",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "location": "house",
+     "cell": 9
+    },
+    {
+     "id": "b5",
+     "name": "Simvastatin 20 mg",
+     "brand": "Simvastatin",
+     "generic_printed": "simvastatin",
+     "ingredient": "simvastatin",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 3
+    }
+   ],
+   "expected": [
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "clean"
+  },
+  {
+   "name": "Eval kitchen 04",
+   "letter": [
+    {
+     "name": "Furosemide 20 mg",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Apixaban 2.5 mg",
+     "ingredient": "apixaban",
+     "strength": "2.5 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Allopurinol 100 mg",
+     "ingredient": "allopurinol",
+     "strength": "100 mg",
+     "action": "new"
+    },
+    {
+     "name": "Prednisolone 5 mg",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Gabapentin 300 mg",
+     "ingredient": "gabapentin",
+     "strength": "300 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Furosemide 20 mg",
+     "brand": "Furosemide",
+     "generic_printed": "furosemide",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "b2",
+     "name": "Apixaban 5 mg",
+     "brand": "Apixaban",
+     "generic_printed": "apixaban",
+     "ingredient": "apixaban",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 9
+    },
+    {
+     "id": "b3",
+     "name": "Allopurinol 100 mg",
+     "brand": "Allopurinol",
+     "generic_printed": "allopurinol",
+     "ingredient": "allopurinol",
+     "strength": "100 mg",
+     "location": "house",
+     "cell": 4
+    },
+    {
+     "id": "b4",
+     "name": "Prednisolone 5 mg",
+     "brand": "Prednisolone",
+     "generic_printed": "prednisolone",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 7
+    },
+    {
+     "id": "b5",
+     "name": "Predsolo 5 mg",
+     "brand": "Predsolo",
+     "generic_printed": "prednisolone",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b6",
+     "name": "Gabapentin 300 mg",
+     "brand": "Gabapentin",
+     "generic_printed": "gabapentin",
+     "ingredient": "gabapentin",
+     "strength": "300 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b7",
+     "name": "Losartan 25 mg",
+     "brand": "Losartan",
+     "generic_printed": "losartan potassium",
+     "ingredient": "losartan",
+     "strength": "25 mg",
+     "location": "house",
+     "cell": 6
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "mild"
+  },
+  {
+   "name": "Eval kitchen 05",
+   "letter": [
+    {
+     "name": "Omeprazole 10 mg",
+     "ingredient": "omeprazole",
+     "strength": "10 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Lansoprazole 15 mg",
+     "ingredient": "lansoprazole",
+     "strength": "15 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Levothyroxine 25 micrograms",
+     "ingredient": "levothyroxine",
+     "strength": "25 micrograms",
+     "action": "new"
+    },
+    {
+     "name": "Prednisolone 5 mg",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Paracetamol 500 mg",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Omeprazole 10 mg",
+     "brand": "Omeprazole",
+     "generic_printed": "omeprazole",
+     "ingredient": "omeprazole",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 6
+    },
+    {
+     "id": "b2",
+     "name": "Lansoprazole 30 mg",
+     "brand": "Lansoprazole",
+     "generic_printed": "lansoprazole",
+     "ingredient": "lansoprazole",
+     "strength": "30 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b3",
+     "name": "Prednisolone 5 mg",
+     "brand": "Prednisolone",
+     "generic_printed": "prednisolone",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "b4",
+     "name": "Predsolo 5 mg",
+     "brand": "Predsolo",
+     "generic_printed": "prednisolone",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b5",
+     "name": "Paracetamol 500 mg",
+     "brand": "Paracetamol",
+     "generic_printed": "paracetamol",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 4
+    },
+    {
+     "id": "b6",
+     "name": "Gabapentin 100 mg",
+     "brand": "Gabapentin",
+     "generic_printed": "gabapentin",
+     "ingredient": "gabapentin",
+     "strength": "100 mg",
+     "location": "house",
+     "cell": 9
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "NEW_BUT_NOT_FOUND",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "harsh"
+  },
+  {
+   "name": "Eval kitchen 06",
+   "letter": [
+    {
+     "name": "Bisoprolol 1.25 mg",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Metformin 500 mg",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Prednisolone 5 mg",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "action": "new"
+    },
+    {
+     "name": "Simvastatin 20 mg",
+     "ingredient": "simvastatin",
+     "strength": "20 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Amlodipine 10 mg",
+     "ingredient": "amlodipine",
+     "strength": "10 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Tamsulosin 400 micrograms",
+     "ingredient": "tamsulosin",
+     "strength": "400 micrograms",
+     "action": "stopped"
+    },
+    {
+     "name": "Tamsulosin 400 micrograms",
+     "ingredient": "tamsulosin",
+     "strength": "400 micrograms",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Bisoprolol 1.25 mg",
+     "brand": "Bisoprolol",
+     "generic_printed": "bisoprolol fumarate",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "o1",
+     "name": "Bisoprolol",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "location": "organiser",
+     "slot": "Mon AM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Metformin 850 mg",
+     "brand": "Metformin",
+     "generic_printed": "metformin hydrochloride",
+     "ingredient": "metformin",
+     "strength": "850 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "b4",
+     "name": "Prednisolone 5 mg",
+     "brand": "Prednisolone",
+     "generic_printed": "prednisolone",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 6
+    },
+    {
+     "id": "b5",
+     "name": "Simvastatin 20 mg",
+     "brand": "Simvastatin",
+     "generic_printed": "simvastatin",
+     "ingredient": "simvastatin",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 9
+    },
+    {
+     "id": "b6",
+     "name": "Simvalin 20 mg",
+     "brand": "Simvalin",
+     "generic_printed": "simvastatin",
+     "ingredient": "simvastatin",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "b7",
+     "name": "Amlodipine 10 mg",
+     "brand": "Amlodipine",
+     "generic_printed": "amlodipine besilate",
+     "ingredient": "amlodipine",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "b8",
+     "name": "Amitriptyline 10 mg",
+     "brand": "Amitriptyline",
+     "generic_printed": "amitriptyline hydrochloride",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 1
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "LETTER_CONTRADICTION",
+    "ORGANISER_CONTAINS_STOPPED",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "clean"
+  },
+  {
+   "name": "Eval kitchen 07",
+   "letter": [
+    {
+     "name": "Amlodipine 5 mg",
+     "ingredient": "amlodipine",
+     "strength": "5 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Amitriptyline 25 mg",
+     "ingredient": "amitriptyline",
+     "strength": "25 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Metformin 500 mg",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "action": "new"
+    },
+    {
+     "name": "Paracetamol 500 mg",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Simvastatin 40 mg",
+     "ingredient": "simvastatin",
+     "strength": "40 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Amlodipine 5 mg",
+     "brand": "Amlodipine",
+     "generic_printed": "amlodipine besilate",
+     "ingredient": "amlodipine",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "o1",
+     "name": "Amlodipine",
+     "ingredient": "amlodipine",
+     "strength": "5 mg",
+     "location": "organiser",
+     "slot": "Mon AM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Amitriptyline 10 mg",
+     "brand": "Amitriptyline",
+     "generic_printed": "amitriptyline hydrochloride",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "b4",
+     "name": "Metformin 500 mg",
+     "brand": "Metformin",
+     "generic_printed": "metformin hydrochloride",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "b5",
+     "name": "Paracetamol 500 mg",
+     "brand": "Paracetamol",
+     "generic_printed": "paracetamol",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b6",
+     "name": "Simvastatin 40 mg",
+     "brand": "Simvastatin",
+     "generic_printed": "simvastatin",
+     "ingredient": "simvastatin",
+     "strength": "40 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b7",
+     "name": "Doxazosin 1 mg",
+     "brand": "Doxazosin",
+     "generic_printed": "doxazosin mesilate",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "location": "house",
+     "cell": 4
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "ORGANISER_CONTAINS_STOPPED",
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "mild"
+  },
+  {
+   "name": "Eval kitchen 08",
+   "letter": [
+    {
+     "name": "Atorvastatin 10 mg",
+     "ingredient": "atorvastatin",
+     "strength": "10 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Levothyroxine 25 micrograms",
+     "ingredient": "levothyroxine",
+     "strength": "25 micrograms",
+     "action": "changed"
+    },
+    {
+     "name": "Amitriptyline 10 mg",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "action": "new"
+    },
+    {
+     "name": "Clopidogrel 75 mg",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Bisoprolol 10 mg",
+     "ingredient": "bisoprolol",
+     "strength": "10 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Atorvastatin 10 mg",
+     "brand": "Atorvastatin",
+     "generic_printed": "atorvastatin calcium",
+     "ingredient": "atorvastatin",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "o1",
+     "name": "Atorvastatin",
+     "ingredient": "atorvastatin",
+     "strength": "10 mg",
+     "location": "organiser",
+     "slot": "Mon AM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Levothyroxine 50 micrograms",
+     "brand": "Levothyroxine",
+     "generic_printed": "levothyroxine sodium",
+     "ingredient": "levothyroxine",
+     "strength": "50 micrograms",
+     "location": "house",
+     "cell": 4
+    },
+    {
+     "id": "b4",
+     "name": "Amitriptyline 10 mg",
+     "brand": "Amitriptyline",
+     "generic_printed": "amitriptyline hydrochloride",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 6
+    },
+    {
+     "id": "b5",
+     "name": "Clopidogrel 75 mg",
+     "brand": "Clopidogrel",
+     "generic_printed": "clopidogrel hydrogen sulfate",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b6",
+     "name": "Clopivas 75 mg",
+     "brand": "Clopivas",
+     "generic_printed": "clopidogrel",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b7",
+     "name": "Bisoprolol 10 mg",
+     "brand": "Bisoprolol",
+     "generic_printed": "bisoprolol fumarate",
+     "ingredient": "bisoprolol",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 9
+    },
+    {
+     "id": "b8",
+     "name": "Sertraline 50 mg",
+     "brand": "Sertraline",
+     "generic_printed": "sertraline hydrochloride",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "location": "house",
+     "cell": 7
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "ORGANISER_CONTAINS_STOPPED",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "harsh"
+  },
+  {
+   "name": "Eval kitchen 09",
+   "letter": [
+    {
+     "name": "Bisoprolol 1.25 mg",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Atorvastatin 20 mg",
+     "ingredient": "atorvastatin",
+     "strength": "20 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Lansoprazole 15 mg",
+     "ingredient": "lansoprazole",
+     "strength": "15 mg",
+     "action": "new"
+    },
+    {
+     "name": "Prednisolone 5 mg",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Paracetamol 500 mg",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Bisoprolol 1.25 mg",
+     "brand": "Bisoprolol",
+     "generic_printed": "bisoprolol fumarate",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b2",
+     "name": "Atorvastatin 10 mg",
+     "brand": "Atorvastatin",
+     "generic_printed": "atorvastatin calcium",
+     "ingredient": "atorvastatin",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b3",
+     "name": "Prednisolone 5 mg",
+     "brand": "Prednisolone",
+     "generic_printed": "prednisolone",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "b4",
+     "name": "Paracetamol 500 mg",
+     "brand": "Paracetamol",
+     "generic_printed": "paracetamol",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "b5",
+     "name": "Losartan 25 mg",
+     "brand": "Losartan",
+     "generic_printed": "losartan potassium",
+     "ingredient": "losartan",
+     "strength": "25 mg",
+     "location": "house",
+     "cell": 4
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "NEW_BUT_NOT_FOUND",
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "clean"
+  },
+  {
+   "name": "Eval kitchen 10",
+   "letter": [
+    {
+     "name": "Furosemide 20 mg",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Ramipril 5 mg",
+     "ingredient": "ramipril",
+     "strength": "5 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Metformin 500 mg",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "action": "new"
+    },
+    {
+     "name": "Omeprazole 10 mg",
+     "ingredient": "omeprazole",
+     "strength": "10 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Bendroflumethiazide 2.5 mg",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Doxazosin 1 mg",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Doxazosin 1 mg",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Furosemide 20 mg",
+     "brand": "Furosemide",
+     "generic_printed": "furosemide",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "o1",
+     "name": "Furosemide",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "location": "organiser",
+     "slot": "Mon AM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Ramipril 2.5 mg",
+     "brand": "Ramipril",
+     "generic_printed": "ramipril",
+     "ingredient": "ramipril",
+     "strength": "2.5 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "b4",
+     "name": "Omeprazole 10 mg",
+     "brand": "Omeprazole",
+     "generic_printed": "omeprazole",
+     "ingredient": "omeprazole",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 9
+    },
+    {
+     "id": "b5",
+     "name": "Bendroflumethiazide 2.5 mg",
+     "brand": "Bendroflumethiazide",
+     "generic_printed": "bendroflumethiazide",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "location": "house",
+     "cell": 6
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "LETTER_CONTRADICTION",
+    "NEW_BUT_NOT_FOUND",
+    "ORGANISER_CONTAINS_STOPPED",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "mild"
+  },
+  {
+   "name": "Eval kitchen 11",
+   "letter": [
+    {
+     "name": "Amlodipine 5 mg",
+     "ingredient": "amlodipine",
+     "strength": "5 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Bisoprolol 2.5 mg",
+     "ingredient": "bisoprolol",
+     "strength": "2.5 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Furosemide 20 mg",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "action": "new"
+    },
+    {
+     "name": "Sertraline 50 mg",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Metformin 850 mg",
+     "ingredient": "metformin",
+     "strength": "850 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Amlodipine 5 mg",
+     "brand": "Amlodipine",
+     "generic_printed": "amlodipine besilate",
+     "ingredient": "amlodipine",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 7
+    },
+    {
+     "id": "o1",
+     "name": "Amlodipine",
+     "ingredient": "amlodipine",
+     "strength": "5 mg",
+     "location": "organiser",
+     "slot": "Mon AM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Bisoprolol 5 mg",
+     "brand": "Bisoprolol",
+     "generic_printed": "bisoprolol fumarate",
+     "ingredient": "bisoprolol",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "b4",
+     "name": "Furosemide 20 mg",
+     "brand": "Furosemide",
+     "generic_printed": "furosemide",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "b5",
+     "name": "Sertraline 50 mg",
+     "brand": "Sertraline",
+     "generic_printed": "sertraline hydrochloride",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "b6",
+     "name": "Metformin 850 mg",
+     "brand": "Metformin",
+     "generic_printed": "metformin hydrochloride",
+     "ingredient": "metformin",
+     "strength": "850 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b7",
+     "name": "Prednisolone 5 mg",
+     "brand": "Prednisolone",
+     "generic_printed": "prednisolone",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 1
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "ORGANISER_CONTAINS_STOPPED",
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "harsh"
+  },
+  {
+   "name": "Eval kitchen 12",
+   "letter": [
+    {
+     "name": "Bendroflumethiazide 2.5 mg",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Lansoprazole 15 mg",
+     "ingredient": "lansoprazole",
+     "strength": "15 mg",
+     "action": "new"
+    },
+    {
+     "name": "Bisoprolol 1.25 mg",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Losartan 100 mg",
+     "ingredient": "losartan",
+     "strength": "100 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Bendroflumethiazide 2.5 mg",
+     "brand": "Bendroflumethiazide",
+     "generic_printed": "bendroflumethiazide",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "location": "house",
+     "cell": 6
+    },
+    {
+     "id": "b2",
+     "name": "Lansoprazole 15 mg",
+     "brand": "Lansoprazole",
+     "generic_printed": "lansoprazole",
+     "ingredient": "lansoprazole",
+     "strength": "15 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "b3",
+     "name": "Bisoprolol 1.25 mg",
+     "brand": "Bisoprolol",
+     "generic_printed": "bisoprolol fumarate",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "b4",
+     "name": "Bisocor 1.25 mg",
+     "brand": "Bisocor",
+     "generic_printed": "bisoprolol",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b5",
+     "name": "Losartan 100 mg",
+     "brand": "Losartan",
+     "generic_printed": "losartan potassium",
+     "ingredient": "losartan",
+     "strength": "100 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "b6",
+     "name": "Levothyroxine 25 micrograms",
+     "brand": "Levothyroxine",
+     "generic_printed": "levothyroxine sodium",
+     "ingredient": "levothyroxine",
+     "strength": "25 micrograms",
+     "location": "house",
+     "cell": 7
+    }
+   ],
+   "expected": [
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "clean"
+  },
+  {
+   "name": "Eval kitchen 13",
+   "letter": [
+    {
+     "name": "Losartan 25 mg",
+     "ingredient": "losartan",
+     "strength": "25 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Doxazosin 2 mg",
+     "ingredient": "doxazosin",
+     "strength": "2 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Bisoprolol 1.25 mg",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "action": "new"
+    },
+    {
+     "name": "Paracetamol 500 mg",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Allopurinol 300 mg",
+     "ingredient": "allopurinol",
+     "strength": "300 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Gabapentin 100 mg",
+     "ingredient": "gabapentin",
+     "strength": "100 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Gabapentin 100 mg",
+     "ingredient": "gabapentin",
+     "strength": "100 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Losartan 25 mg",
+     "brand": "Losartan",
+     "generic_printed": "losartan potassium",
+     "ingredient": "losartan",
+     "strength": "25 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "b2",
+     "name": "Doxazosin 1 mg",
+     "brand": "Doxazosin",
+     "generic_printed": "doxazosin mesilate",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "b3",
+     "name": "Bisoprolol 1.25 mg",
+     "brand": "Bisoprolol",
+     "generic_printed": "bisoprolol fumarate",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 9
+    },
+    {
+     "id": "b4",
+     "name": "Paracetamol 500 mg",
+     "brand": "Paracetamol",
+     "generic_printed": "paracetamol",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 6
+    },
+    {
+     "id": "b5",
+     "name": "Paramol 500 mg",
+     "brand": "Paramol",
+     "generic_printed": "paracetamol",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 7
+    },
+    {
+     "id": "b6",
+     "name": "Allopurinol 300 mg",
+     "brand": "Allopurinol",
+     "generic_printed": "allopurinol",
+     "ingredient": "allopurinol",
+     "strength": "300 mg",
+     "location": "house",
+     "cell": 8
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "LETTER_CONTRADICTION",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "mild"
+  },
+  {
+   "name": "Eval kitchen 14",
+   "letter": [
+    {
+     "name": "Doxazosin 1 mg",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Omeprazole 20 mg",
+     "ingredient": "omeprazole",
+     "strength": "20 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Bendroflumethiazide 2.5 mg",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "action": "new"
+    },
+    {
+     "name": "Bisoprolol 1.25 mg",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Gabapentin 300 mg",
+     "ingredient": "gabapentin",
+     "strength": "300 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Doxazosin 1 mg",
+     "brand": "Doxazosin",
+     "generic_printed": "doxazosin mesilate",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "o1",
+     "name": "Doxazosin",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "location": "organiser",
+     "slot": "Mon AM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Omeprazole 10 mg",
+     "brand": "Omeprazole",
+     "generic_printed": "omeprazole",
+     "ingredient": "omeprazole",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "b4",
+     "name": "Bendroflumethiazide 2.5 mg",
+     "brand": "Bendroflumethiazide",
+     "generic_printed": "bendroflumethiazide",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "location": "house",
+     "cell": 7
+    },
+    {
+     "id": "b5",
+     "name": "Bisoprolol 1.25 mg",
+     "brand": "Bisoprolol",
+     "generic_printed": "bisoprolol fumarate",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "b6",
+     "name": "Bisocor 1.25 mg",
+     "brand": "Bisocor",
+     "generic_printed": "bisoprolol",
+     "ingredient": "bisoprolol",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 4
+    },
+    {
+     "id": "b7",
+     "name": "Gabapentin 300 mg",
+     "brand": "Gabapentin",
+     "generic_printed": "gabapentin",
+     "ingredient": "gabapentin",
+     "strength": "300 mg",
+     "location": "house",
+     "cell": 3
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "ORGANISER_CONTAINS_STOPPED",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "harsh"
+  },
+  {
+   "name": "Eval kitchen 15",
+   "letter": [
+    {
+     "name": "Omeprazole 10 mg",
+     "ingredient": "omeprazole",
+     "strength": "10 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Amlodipine 5 mg",
+     "ingredient": "amlodipine",
+     "strength": "5 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Bendroflumethiazide 2.5 mg",
+     "ingredient": "bendroflumethiazide",
+     "strength": "2.5 mg",
+     "action": "new"
+    },
+    {
+     "name": "Furosemide 20 mg",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Apixaban 5 mg",
+     "ingredient": "apixaban",
+     "strength": "5 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Omeprazole 10 mg",
+     "brand": "Omeprazole",
+     "generic_printed": "omeprazole",
+     "ingredient": "omeprazole",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 7
+    },
+    {
+     "id": "b2",
+     "name": "Amlodipine 10 mg",
+     "brand": "Amlodipine",
+     "generic_printed": "amlodipine besilate",
+     "ingredient": "amlodipine",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "b3",
+     "name": "Furosemide 20 mg",
+     "brand": "Furosemide",
+     "generic_printed": "furosemide",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b4",
+     "name": "Diurofen 20 mg",
+     "brand": "Diurofen",
+     "generic_printed": "furosemide",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 4
+    },
+    {
+     "id": "b5",
+     "name": "Apixaban 5 mg",
+     "brand": "Apixaban",
+     "generic_printed": "apixaban",
+     "ingredient": "apixaban",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 9
+    },
+    {
+     "id": "b6",
+     "name": "Levothyroxine 25 micrograms",
+     "brand": "Levothyroxine",
+     "generic_printed": "levothyroxine sodium",
+     "ingredient": "levothyroxine",
+     "strength": "25 micrograms",
+     "location": "house",
+     "cell": 1
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "NEW_BUT_NOT_FOUND",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "clean"
+  },
+  {
+   "name": "Eval kitchen 16",
+   "letter": [
+    {
+     "name": "Ramipril 1.25 mg",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Doxazosin 1 mg",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Simvastatin 20 mg",
+     "ingredient": "simvastatin",
+     "strength": "20 mg",
+     "action": "new"
+    },
+    {
+     "name": "Metformin 500 mg",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Gabapentin 300 mg",
+     "ingredient": "gabapentin",
+     "strength": "300 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Sertraline 50 mg",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Sertraline 50 mg",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Ramipril 1.25 mg",
+     "brand": "Ramipril",
+     "generic_printed": "ramipril",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "o1",
+     "name": "Ramipril",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "location": "organiser",
+     "slot": "Wed PM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Doxazosin 2 mg",
+     "brand": "Doxazosin",
+     "generic_printed": "doxazosin mesilate",
+     "ingredient": "doxazosin",
+     "strength": "2 mg",
+     "location": "house",
+     "cell": 9
+    },
+    {
+     "id": "b4",
+     "name": "Metformin 500 mg",
+     "brand": "Metformin",
+     "generic_printed": "metformin hydrochloride",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b5",
+     "name": "Glucomet 500 mg",
+     "brand": "Glucomet",
+     "generic_printed": "metformin",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 6
+    },
+    {
+     "id": "b6",
+     "name": "Gabapentin 300 mg",
+     "brand": "Gabapentin",
+     "generic_printed": "gabapentin",
+     "ingredient": "gabapentin",
+     "strength": "300 mg",
+     "location": "house",
+     "cell": 7
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "LETTER_CONTRADICTION",
+    "NEW_BUT_NOT_FOUND",
+    "ORGANISER_CONTAINS_STOPPED",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "mild"
+  },
+  {
+   "name": "Eval kitchen 17",
+   "letter": [
+    {
+     "name": "Sertraline 50 mg",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Levothyroxine 100 micrograms",
+     "ingredient": "levothyroxine",
+     "strength": "100 micrograms",
+     "action": "changed"
+    },
+    {
+     "name": "Paracetamol 500 mg",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "action": "new"
+    },
+    {
+     "name": "Losartan 25 mg",
+     "ingredient": "losartan",
+     "strength": "25 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Omeprazole 40 mg",
+     "ingredient": "omeprazole",
+     "strength": "40 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Prednisolone 5 mg",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Prednisolone 5 mg",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Sertraline 50 mg",
+     "brand": "Sertraline",
+     "generic_printed": "sertraline hydrochloride",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "location": "house",
+     "cell": 6
+    },
+    {
+     "id": "o1",
+     "name": "Sertraline",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "location": "organiser",
+     "slot": "Mon AM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Levothyroxine 50 micrograms",
+     "brand": "Levothyroxine",
+     "generic_printed": "levothyroxine sodium",
+     "ingredient": "levothyroxine",
+     "strength": "50 micrograms",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b4",
+     "name": "Paracetamol 500 mg",
+     "brand": "Paracetamol",
+     "generic_printed": "paracetamol",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 4
+    },
+    {
+     "id": "b5",
+     "name": "Losartan 25 mg",
+     "brand": "Losartan",
+     "generic_printed": "losartan potassium",
+     "ingredient": "losartan",
+     "strength": "25 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b6",
+     "name": "Losacar 25 mg",
+     "brand": "Losacar",
+     "generic_printed": "losartan",
+     "ingredient": "losartan",
+     "strength": "25 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "b7",
+     "name": "Omeprazole 40 mg",
+     "brand": "Omeprazole",
+     "generic_printed": "omeprazole",
+     "ingredient": "omeprazole",
+     "strength": "40 mg",
+     "location": "house",
+     "cell": 9
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "LETTER_CONTRADICTION",
+    "ORGANISER_CONTAINS_STOPPED",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "harsh"
+  },
+  {
+   "name": "Eval kitchen 18",
+   "letter": [
+    {
+     "name": "Amitriptyline 10 mg",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Bisoprolol 10 mg",
+     "ingredient": "bisoprolol",
+     "strength": "10 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Doxazosin 1 mg",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "action": "new"
+    },
+    {
+     "name": "Ramipril 1.25 mg",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Amlodipine 10 mg",
+     "ingredient": "amlodipine",
+     "strength": "10 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Simvastatin 20 mg",
+     "ingredient": "simvastatin",
+     "strength": "20 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Simvastatin 20 mg",
+     "ingredient": "simvastatin",
+     "strength": "20 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Amitriptyline 10 mg",
+     "brand": "Amitriptyline",
+     "generic_printed": "amitriptyline hydrochloride",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "o1",
+     "name": "Amitriptyline",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "location": "organiser",
+     "slot": "Wed PM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Bisoprolol 2.5 mg",
+     "brand": "Bisoprolol",
+     "generic_printed": "bisoprolol fumarate",
+     "ingredient": "bisoprolol",
+     "strength": "2.5 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "b4",
+     "name": "Ramipril 1.25 mg",
+     "brand": "Ramipril",
+     "generic_printed": "ramipril",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "b5",
+     "name": "Amlodipine 10 mg",
+     "brand": "Amlodipine",
+     "generic_printed": "amlodipine besilate",
+     "ingredient": "amlodipine",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 6
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "LETTER_CONTRADICTION",
+    "NEW_BUT_NOT_FOUND",
+    "ORGANISER_CONTAINS_STOPPED",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "clean"
+  },
+  {
+   "name": "Eval kitchen 19",
+   "letter": [
+    {
+     "name": "Apixaban 2.5 mg",
+     "ingredient": "apixaban",
+     "strength": "2.5 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Lansoprazole 30 mg",
+     "ingredient": "lansoprazole",
+     "strength": "30 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Gabapentin 100 mg",
+     "ingredient": "gabapentin",
+     "strength": "100 mg",
+     "action": "new"
+    },
+    {
+     "name": "Ramipril 1.25 mg",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Clopidogrel 75 mg",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Sertraline 50 mg",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Sertraline 50 mg",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Apixaban 2.5 mg",
+     "brand": "Apixaban",
+     "generic_printed": "apixaban",
+     "ingredient": "apixaban",
+     "strength": "2.5 mg",
+     "location": "house",
+     "cell": 7
+    },
+    {
+     "id": "o1",
+     "name": "Apixaban",
+     "ingredient": "apixaban",
+     "strength": "2.5 mg",
+     "location": "organiser",
+     "slot": "Mon AM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Lansoprazole 15 mg",
+     "brand": "Lansoprazole",
+     "generic_printed": "lansoprazole",
+     "ingredient": "lansoprazole",
+     "strength": "15 mg",
+     "location": "house",
+     "cell": 4
+    },
+    {
+     "id": "b4",
+     "name": "Ramipril 1.25 mg",
+     "brand": "Ramipril",
+     "generic_printed": "ramipril",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b5",
+     "name": "Clopidogrel 75 mg",
+     "brand": "Clopidogrel",
+     "generic_printed": "clopidogrel hydrogen sulfate",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "location": "house",
+     "cell": 3
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "LETTER_CONTRADICTION",
+    "NEW_BUT_NOT_FOUND",
+    "ORGANISER_CONTAINS_STOPPED",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "mild"
+  },
+  {
+   "name": "Eval kitchen 20",
+   "letter": [
+    {
+     "name": "Clopidogrel 75 mg",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Omeprazole 40 mg",
+     "ingredient": "omeprazole",
+     "strength": "40 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Metformin 500 mg",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "action": "new"
+    },
+    {
+     "name": "Losartan 25 mg",
+     "ingredient": "losartan",
+     "strength": "25 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Amitriptyline 25 mg",
+     "ingredient": "amitriptyline",
+     "strength": "25 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Ramipril 1.25 mg",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Ramipril 1.25 mg",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Clopidogrel 75 mg",
+     "brand": "Clopidogrel",
+     "generic_printed": "clopidogrel hydrogen sulfate",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "location": "house",
+     "cell": 7
+    },
+    {
+     "id": "o1",
+     "name": "Clopidogrel",
+     "ingredient": "clopidogrel",
+     "strength": "75 mg",
+     "location": "organiser",
+     "slot": "Tue AM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Omeprazole 10 mg",
+     "brand": "Omeprazole",
+     "generic_printed": "omeprazole",
+     "ingredient": "omeprazole",
+     "strength": "10 mg",
+     "location": "house",
+     "cell": 6
+    },
+    {
+     "id": "b4",
+     "name": "Losartan 25 mg",
+     "brand": "Losartan",
+     "generic_printed": "losartan potassium",
+     "ingredient": "losartan",
+     "strength": "25 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b5",
+     "name": "Amitriptyline 25 mg",
+     "brand": "Amitriptyline",
+     "generic_printed": "amitriptyline hydrochloride",
+     "ingredient": "amitriptyline",
+     "strength": "25 mg",
+     "location": "house",
+     "cell": 4
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "LETTER_CONTRADICTION",
+    "NEW_BUT_NOT_FOUND",
+    "ORGANISER_CONTAINS_STOPPED",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "harsh"
+  },
+  {
+   "name": "Eval kitchen 21",
+   "letter": [
+    {
+     "name": "Furosemide 20 mg",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Allopurinol 100 mg",
+     "ingredient": "allopurinol",
+     "strength": "100 mg",
+     "action": "new"
+    },
+    {
+     "name": "Ramipril 1.25 mg",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Paracetamol 500 mg",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Furosemide 20 mg",
+     "brand": "Furosemide",
+     "generic_printed": "furosemide",
+     "ingredient": "furosemide",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 5
+    },
+    {
+     "id": "b2",
+     "name": "Ramipril 1.25 mg",
+     "brand": "Ramipril",
+     "generic_printed": "ramipril",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b3",
+     "name": "Paracetamol 500 mg",
+     "brand": "Paracetamol",
+     "generic_printed": "paracetamol",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 6
+    }
+   ],
+   "expected": [
+    "NEW_BUT_NOT_FOUND",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "clean"
+  },
+  {
+   "name": "Eval kitchen 22",
+   "letter": [
+    {
+     "name": "Doxazosin 1 mg",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Metformin 500 mg",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "action": "new"
+    },
+    {
+     "name": "Sertraline 50 mg",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Atorvastatin 80 mg",
+     "ingredient": "atorvastatin",
+     "strength": "80 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Doxazosin 1 mg",
+     "brand": "Doxazosin",
+     "generic_printed": "doxazosin mesilate",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "location": "house",
+     "cell": 2
+    },
+    {
+     "id": "o1",
+     "name": "Doxazosin",
+     "ingredient": "doxazosin",
+     "strength": "1 mg",
+     "location": "organiser",
+     "slot": "Wed PM",
+     "cell": 0,
+     "pill_colour": "white"
+    },
+    {
+     "id": "b3",
+     "name": "Metformin 500 mg",
+     "brand": "Metformin",
+     "generic_printed": "metformin hydrochloride",
+     "ingredient": "metformin",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 4
+    },
+    {
+     "id": "b4",
+     "name": "Sertraline 50 mg",
+     "brand": "Sertraline",
+     "generic_printed": "sertraline hydrochloride",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b5",
+     "name": "Sertrane 50 mg",
+     "brand": "Sertrane",
+     "generic_printed": "sertraline",
+     "ingredient": "sertraline",
+     "strength": "50 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "b6",
+     "name": "Atorvastatin 80 mg",
+     "brand": "Atorvastatin",
+     "generic_printed": "atorvastatin calcium",
+     "ingredient": "atorvastatin",
+     "strength": "80 mg",
+     "location": "house",
+     "cell": 6
+    }
+   ],
+   "expected": [
+    "ORGANISER_CONTAINS_STOPPED",
+    "SAME_INGREDIENT_TWO_BRANDS",
+    "STOPPED_BUT_PRESENT"
+   ],
+   "defects": "mild"
+  },
+  {
+   "name": "Eval kitchen 23",
+   "letter": [
+    {
+     "name": "Prednisolone 5 mg",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "action": "stopped"
+    },
+    {
+     "name": "Atorvastatin 10 mg",
+     "ingredient": "atorvastatin",
+     "strength": "10 mg",
+     "action": "changed"
+    },
+    {
+     "name": "Amitriptyline 10 mg",
+     "ingredient": "amitriptyline",
+     "strength": "10 mg",
+     "action": "new"
+    },
+    {
+     "name": "Ramipril 1.25 mg",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "action": "continued"
+    },
+    {
+     "name": "Paracetamol 500 mg",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "action": "continued"
+    }
+   ],
+   "house": [
+    {
+     "id": "b1",
+     "name": "Prednisolone 5 mg",
+     "brand": "Prednisolone",
+     "generic_printed": "prednisolone",
+     "ingredient": "prednisolone",
+     "strength": "5 mg",
+     "location": "house",
+     "cell": 4
+    },
+    {
+     "id": "b2",
+     "name": "Atorvastatin 20 mg",
+     "brand": "Atorvastatin",
+     "generic_printed": "atorvastatin calcium",
+     "ingredient": "atorvastatin",
+     "strength": "20 mg",
+     "location": "house",
+     "cell": 8
+    },
+    {
+     "id": "b3",
+     "name": "Ramipril 1.25 mg",
+     "brand": "Ramipril",
+     "generic_printed": "ramipril",
+     "ingredient": "ramipril",
+     "strength": "1.25 mg",
+     "location": "house",
+     "cell": 3
+    },
+    {
+     "id": "b4",
+     "name": "Paracetamol 500 mg",
+     "brand": "Paracetamol",
+     "generic_printed": "paracetamol",
+     "ingredient": "paracetamol",
+     "strength": "500 mg",
+     "location": "house",
+     "cell": 1
+    },
+    {
+     "id": "b5",
+     "name": "Gabapentin 100 mg",
+     "brand": "Gabapentin",
+     "generic_printed": "gabapentin",
+     "ingredient": "gabapentin",
+     "strength": "100 mg",
+     "location": "house",
+     "cell": 7
+    }
+   ],
+   "expected": [
+    "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT",
+    "NEW_BUT_NOT_FOUND",
+    "STOPPED_BUT_PRESENT",
+    "UNMATCHED_ITEM"
+   ],
+   "defects": "harsh"
+  }
+ ]
+}

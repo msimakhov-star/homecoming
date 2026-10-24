@@ -60,9 +60,15 @@ def letter_page(k: dict, path: Path):
 def box(d: ImageDraw.ImageDraw, x: int, y: int, w: int, h: int, brand: str, generic: str, strength: str, colour: str):
     d.rounded_rectangle((x, y, x + w, y + h), radius=18, fill=colour, outline="#333", width=3)
     d.rectangle((x + 12, y + 12, x + w - 12, y + 70), fill="white")
-    d.text((x + 24, y + 20), brand, font=font(36, True), fill="#1a1a1a")
+    size = 36
+    while size > 18 and d.textlength(brand, font=font(size, True)) > w - 48:
+        size -= 2
+    d.text((x + 24, y + 20 + (36 - size) // 2), brand, font=font(size, True), fill="#1a1a1a")
     d.text((x + 24, y + 84), f"{strength}", font=font(42, True), fill="white")
-    d.text((x + 24, y + 140), generic, font=font(26), fill="white")
+    gsize = 26
+    while gsize > 14 and d.textlength(generic, font=font(gsize)) > w - 48:
+        gsize -= 2
+    d.text((x + 24, y + 140), generic, font=font(gsize), fill="white")
     d.text((x + 24, y + 176), "28 film-coated tablets", font=font(22), fill="white")
     # dispensing label strip
     d.rectangle((x + 12, y + h - 70, x + w - 12, y + h - 12), fill="#fffbe6", outline="#aaa")
