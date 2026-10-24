@@ -7,13 +7,15 @@ recorded sample kitchen and says so instead of going dark.
 """
 from __future__ import annotations
 
+import asyncio
+import json
 import os
 import secrets
 import time
 from pathlib import Path
 
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import pipeline
@@ -86,26 +88,7 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
             raise HTTPException(404)
         return FileResponse(p, media_type="image/png")
 
-    @api.post("/api/run")
-    async def run(request: Request, sample: int | None = Form(None),
-                  letter: list[UploadFile] = File([]), boxes: list[UploadFile] = File([]), organiser: list[UploadFile] = File([])):
-        tf = TokenFactory(meter=Meter())
-        norm = Normaliser(cache=KV())
-        kitchens = pipeline.load_kitchens()
-        if sample is not None:
-            idx = sample if 0 <= sample < len(kitchens) else 0
-            k = kitchens[idx]
-            # Ultra/Lightning run live on the fixture once per deploy, then the result is cached for everyone
-            res = state.get(f"sample:{idx}:{tf.live}") if tf.live else None
-            if res is None:
-                res = pipeline.run(kitchen=k, tf=tf if not throttle(request) else TokenFactory(api_key=None), norm=norm)
-                record_spend(res["cost"]["total_usd"])
-                if tf.live and res["cost"]["total_usd"] > 0:
-                    state[f"sample:{idx}:{tf.live}"] = res
-            res["recorded"] = True
-            res["reason"] = "sample kitchen, the photos were not re-read"
-            res["sample_images"] = {g: f"/samples/{kitchens.index(k)}/{g}.png" for g in pipeline.GROUPS}
-            return res
+    async def read_uploads(letter, boxes, organiser) -> dict:
         files = {"letter": letter, "boxes": boxes, "organiser": organiser}
         if sum(len(v) for v in files.values()) > MAX_IMAGES:
             raise HTTPException(413, f"at most {MAX_IMAGES} photos")
@@ -119,21 +102,74 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
                 images[g].append((data, u.content_type or "image/jpeg"))
         if not images["letter"] or not images["boxes"]:
             raise HTTPException(400, "need at least one letter photo and one photo of the boxes")
+        return images
+
+    def execute(request: Request, sample: int | None, images: dict | None, progress=pipeline._noop) -> dict:
+        """Shared by /api/run and /api/run-stream. Never raises for model failures: degrades to a recorded kitchen."""
+        tf = TokenFactory(meter=Meter())
+        norm = Normaliser(cache=KV())
+        kitchens = pipeline.load_kitchens()
+        if sample is not None:
+            idx = sample if 0 <= sample < len(kitchens) else 0
+            # Ultra/Lightning run live on the fixture once per deploy, then the result is cached for everyone
+            res = state.get(f"sample:{idx}:{tf.live}") if tf.live else None
+            if res is None:
+                res = pipeline.run(kitchen=kitchens[idx], tf=tf if not throttle(request) else TokenFactory(api_key=None),
+                                   norm=norm, progress=progress)
+                record_spend(res["cost"]["total_usd"])
+                if tf.live and res["cost"]["total_usd"] > 0:
+                    state[f"sample:{idx}:{tf.live}"] = res
+            res["recorded"] = True
+            res["reason"] = "sample kitchen, the photos were not re-read"
+            res["sample_images"] = {g: f"/samples/{idx}/{g}.png" for g in pipeline.GROUPS}
+            return res
         reason = throttle(request) or (None if tf.live else "no model key is configured on this server")
-        if reason:
-            res = pipeline.run(kitchen=kitchens[0], tf=TokenFactory(api_key=None), norm=norm)
-            res["reason"] = reason + ", so a recorded sample kitchen is shown instead of your photos"
-            res["sample_images"] = {g: f"/samples/0/{g}.png" for g in pipeline.GROUPS}
-            return res
-        try:
-            res = pipeline.run(images, tf=tf, norm=norm)
-        except Exception as e:  # a model outage must degrade, not go dark
-            res = pipeline.run(kitchen=kitchens[0], tf=TokenFactory(api_key=None), norm=norm)
-            res["reason"] = f"the live run failed ({type(e).__name__}), so a recorded sample kitchen is shown"
-            res["sample_images"] = {g: f"/samples/0/{g}.png" for g in pipeline.GROUPS}
-            return res
-        record_spend(res["cost"]["total_usd"])
+        if reason is None:
+            try:
+                res = pipeline.run(images, tf=tf, norm=norm, progress=progress)
+                record_spend(res["cost"]["total_usd"])
+                return res
+            except Exception as e:  # a model outage must degrade, not go dark
+                record_spend(tf.meter.total_usd)
+                reason = f"the live run failed ({type(e).__name__})"
+        res = pipeline.run(kitchen=kitchens[0], tf=TokenFactory(api_key=None), norm=norm, progress=progress)
+        res["reason"] = reason + ", so a recorded sample kitchen is shown instead of your photos"
+        res["sample_images"] = {g: f"/samples/0/{g}.png" for g in pipeline.GROUPS}
         return res
+
+    @api.post("/api/run")
+    async def run(request: Request, sample: int | None = Form(None),
+                  letter: list[UploadFile] = File([]), boxes: list[UploadFile] = File([]), organiser: list[UploadFile] = File([])):
+        images = None if sample is not None else await read_uploads(letter, boxes, organiser)
+        return await asyncio.to_thread(execute, request, sample, images)
+
+    @api.post("/api/run-stream")
+    async def run_stream(request: Request, sample: int | None = Form(None),
+                         letter: list[UploadFile] = File([]), boxes: list[UploadFile] = File([]), organiser: list[UploadFile] = File([])):
+        """Server-sent events: one {"step","status",...} event per pipeline step, then {"result": ...}."""
+        images = None if sample is not None else await read_uploads(letter, boxes, organiser)
+        loop = asyncio.get_running_loop()
+        q: asyncio.Queue = asyncio.Queue()
+        emit = lambda step, status, info: loop.call_soon_threadsafe(q.put_nowait, {"step": step, "status": status, **info})
+
+        async def worker():
+            try:
+                res = await asyncio.to_thread(execute, request, sample, images, emit)
+                await q.put({"result": res})
+            except Exception as e:
+                await q.put({"error": f"{type(e).__name__}: {e}"[:300]})
+
+        async def events():
+            task = asyncio.create_task(worker())
+            while True:
+                ev = await q.get()
+                yield f"data: {json.dumps(ev)}\n\n"
+                if "result" in ev or "error" in ev:
+                    break
+            await task
+
+        return StreamingResponse(events(), media_type="text/event-stream",
+                                 headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
     @api.post("/api/reconcile")
     def reconcile(request: Request, body: dict):
@@ -155,8 +191,7 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
 
     @api.post("/api/share")
     def share(request: Request, body: dict):
-        import json as _json
-        if len(_json.dumps(body.get("sheet"))) > 20_000:
+        if len(json.dumps(body.get("sheet"))) > 20_000:
             raise HTTPException(413, "sheet too large")
         if throttle(request) == "the demo's hourly limit for your connection is reached":
             raise HTTPException(429, "too many links this hour")

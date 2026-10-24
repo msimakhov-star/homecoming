@@ -3,13 +3,13 @@ const $ = (s, el = document) => el.querySelector(s);
 const state = { files: { letter: [], boxes: [], organiser: [] }, photos: { letter: [], boxes: [], organiser: [] }, sample: null, result: null, rows: null };
 
 const STEPS = [
-  ['Reading the discharge letter', 'Nemotron 3.5 Super VL'],
-  ['Reading every box on the table', 'Nemotron 3.5 Super VL'],
-  ['Reading the pill organiser', 'Nemotron 3.5 Super VL'],
-  ['Matching brand names to ingredients', 'RxNorm + Tavily'],
-  ['Comparing hospital, house and organiser', 'plain code, no model'],
-  ['Auditing the letter and writing questions', 'Nemotron 3 Ultra'],
-  ['Checking every sentence gives no advice', 'Nemotron 3.5 Lightning'],
+  ['extract:letter', 'Reading the discharge letter', 'Nemotron 3.5 Super VL'],
+  ['extract:boxes', 'Reading every box on the table', 'Nemotron 3.5 Super VL'],
+  ['extract:organiser', 'Reading the pill organiser', 'Nemotron 3.5 Super VL'],
+  ['normalise', 'Matching brand names to ingredients', 'RxNorm + Tavily'],
+  ['compare', 'Comparing hospital, house and organiser', 'plain code, no model'],
+  ['interpret', 'Auditing the letter and writing questions', 'Nemotron 3 Ultra'],
+  ['guard', 'Checking every sentence gives no advice', 'Nemotron 3.5 Lightning'],
 ];
 
 function toast(msg, ms = 3500) {
@@ -49,34 +49,81 @@ function syncSamples() {
 /* ---------- run ---------- */
 $('#run').addEventListener('click', async () => {
   if (state.sample === null && (!state.files.letter.length || !state.files.boxes.length)) { toast('Add the letter and a photo of the boxes, or pick a sample.'); return; }
-  const fd = new FormData();
-  if (state.sample !== null) fd.append('sample', state.sample);
-  else for (const g of ['letter', 'boxes', 'organiser']) state.files[g].forEach(f => fd.append(g, f, f.name));
+  const fd = () => {
+    const f = new FormData();
+    if (state.sample !== null) f.append('sample', state.sample);
+    else for (const g of ['letter', 'boxes', 'organiser']) state.files[g].forEach(x => f.append(g, x, x.name));
+    return f;
+  };
   startRail(); $('#run').disabled = true; $('#results').hidden = true;
+  const ctrl = new AbortController(); const tmo = setTimeout(() => ctrl.abort(), 150000);
   try {
-    const ctrl = new AbortController(); const tmo = setTimeout(() => ctrl.abort(), 150000);
-    const r = await fetch('/api/run', { method: 'POST', body: fd, signal: ctrl.signal }).finally(() => clearTimeout(tmo));
-    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
-    const res = await r.json();
+    let res;
+    try { res = await runStream(fd(), ctrl.signal); }
+    catch (e) {  // streaming blocked by a proxy or older browser: plain request
+      if (e.name === 'AbortError' || e.http) throw e;
+      const r = await fetch('/api/run', { method: 'POST', body: fd(), signal: ctrl.signal });
+      if (!r.ok) throw Object.assign(new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`), { http: true });
+      res = await r.json();
+    }
     if (res.sample_images) for (const g in res.sample_images) state.photos[g] = [res.sample_images[g]];
-    finishRail(); render(res);
-  } catch (e) { finishRail(false); toast(e.name === 'AbortError' ? 'That took too long. Please try again, or try a sample kitchen.' : 'Could not check the kitchen: ' + e.message, 6000); }
-  $('#run').disabled = false;
+    await finishRail(); render(res);
+  } catch (e) { await finishRail(false); toast(e.name === 'AbortError' ? 'That took too long. Please try again, or try a sample kitchen.' : 'Could not check the kitchen: ' + e.message, 6000); }
+  clearTimeout(tmo); $('#run').disabled = false;
 });
 
-let railTimer;
+async function runStream(body, signal) {
+  const r = await fetch('/api/run-stream', { method: 'POST', body, signal });
+  if (!r.ok) throw Object.assign(new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`), { http: true });
+  if (!r.body || !r.body.getReader) throw new Error('no streaming');
+  const reader = r.body.getReader(), dec = new TextDecoder(); let buf = '';
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) throw new Error('stream ended early');
+    buf += dec.decode(value, { stream: true });
+    let i;
+    while ((i = buf.indexOf('\n\n')) >= 0) {
+      const line = buf.slice(0, i); buf = buf.slice(i + 2);
+      if (!line.startsWith('data: ')) continue;
+      const ev = JSON.parse(line.slice(6));
+      if (ev.result) return ev.result;
+      if (ev.error) throw Object.assign(new Error(ev.error), { http: true });
+      railEvent(ev);
+    }
+  }
+}
+
+/* The rail shows real server progress. Events from a recorded run arrive at once, so they are paced
+   120 ms apart purely so the eye can follow them; each step says when it was recorded rather than live. */
+let railQueue = Promise.resolve();
 function startRail() {
   $('#progress').hidden = false;
-  $('#rail').innerHTML = STEPS.map(([t, m]) => `<li><span class="dot"></span>${t}<span class="model">${m}</span></li>`).join('');
-  let i = 0; const items = [...$('#rail').children];
-  const tick = () => { items.forEach((li, j) => li.classList.toggle('active', j === i)); items.slice(0, i).forEach(li => li.classList.add('done')); if (i < items.length - 1) i++; };
-  tick(); railTimer = setInterval(tick, 1400);
+  $('#rail').innerHTML = STEPS.map(([k, t, m]) => `<li data-step="${k}"><span class="dot"></span><span>${t}<small class="info"></small></span><span class="model">${m}</span></li>`).join('');
+  railQueue = Promise.resolve();
   $('#progress').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-function finishRail(ok = true) {
-  clearInterval(railTimer);
-  [...$('#rail').children].forEach(li => { li.classList.remove('active'); if (ok) li.classList.add('done'); });
-  if (ok) setTimeout(() => ($('#progress').hidden = true), 600);
+function railEvent(ev) {
+  railQueue = railQueue.then(() => new Promise(done => {
+    const li = $(`#rail li[data-step="${ev.step}"]`); if (!li) return done();
+    li.classList.toggle('active', ev.status === 'running');
+    if (ev.status === 'done' || ev.status === 'skipped') li.classList.add('done');
+    const bits = [];
+    if (ev.status === 'skipped') bits.push('no photo');
+    if (ev.items !== undefined) bits.push(`${ev.items} item${ev.items === 1 ? '' : 's'}`);
+    if (ev.confirmed !== undefined) bits.push(`${ev.confirmed} of ${ev.total} confirmed`);
+    if (ev.discrepancies !== undefined) bits.push(`${ev.discrepancies} disagreement${ev.discrepancies === 1 ? '' : 's'}`);
+    if (ev.cards !== undefined && ev.status === 'done') bits.push(`${ev.cards} question${ev.cards === 1 ? '' : 's'}`);
+    if (ev.rewritten !== undefined) bits.push(`${ev.rewritten} rephrased`);
+    if (ev.ms !== undefined && !ev.recorded) bits.push(`${(ev.ms / 1000).toFixed(1)} s`);
+    if (ev.recorded) bits.push('recorded');
+    if (bits.length) $('.info', li).textContent = ' · ' + bits.join(' · ');
+    setTimeout(done, ev.status === 'running' ? 0 : 120);
+  }));
+}
+async function finishRail(ok = true) {
+  await railQueue;
+  [...$('#rail').children].forEach(li => li.classList.remove('active'));
+  if (ok) await new Promise(r => setTimeout(r, 500)), ($('#progress').hidden = true);
 }
 
 /* ---------- render ---------- */

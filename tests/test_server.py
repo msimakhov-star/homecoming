@@ -55,3 +55,14 @@ def test_sample_image_paths_are_whitelisted():
     c, _ = client()
     assert c.get("/samples/0/boxes.png").status_code == 200
     assert c.get("/samples/0/..%2F..%2Fkitchens.png").status_code == 404
+
+
+def test_run_stream_emits_steps_then_result(monkeypatch):
+    import json as _json
+    monkeypatch.delenv("NEBIUS_API_KEY", raising=False)
+    c, _ = client()
+    with c.stream("POST", "/api/run-stream", data={"sample": "1"}) as r:
+        events = [_json.loads(line[6:]) for line in r.iter_lines() if line.startswith("data: ")]
+    steps = [e["step"] for e in events if "step" in e]
+    assert steps[:3] == ["extract:letter", "extract:boxes", "extract:organiser"] and "guard" in steps
+    assert "result" in events[-1] and {x["type"] for x in events[-1]["result"]["cards"]} == {"LETTER_CONTRADICTION", "SAME_INGREDIENT_TWO_BRANDS"}

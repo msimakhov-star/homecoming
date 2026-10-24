@@ -6,6 +6,8 @@ product still runs end to end ("recorded mode"); the response says so.
 from __future__ import annotations
 
 import json
+import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from .diff import Discrepancy, HouseItem, LetterItem, fallback_question, headline, label, reconcile
@@ -16,6 +18,7 @@ from .prompts import EXTRACT_PROMPTS, EXTRACT_SCHEMA, INTERPRET_SCHEMA, INTERPRE
 
 DATA = Path(__file__).resolve().parent.parent / "data"
 GROUPS = ("letter", "boxes", "organiser")
+ORDER = {"check-today": 0, "ask-when-convenient": 1, "info": 2}
 SEVERITY = {"LETTER_CONTRADICTION": "check-today", "STOPPED_BUT_PRESENT": "check-today",
             "ORGANISER_CONTAINS_STOPPED": "check-today", "DOSE_CHANGED_BUT_OLD_STRENGTH_PRESENT": "check-today",
             "NEW_BUT_NOT_FOUND": "ask-when-convenient", "SAME_INGREDIENT_TWO_BRANDS": "ask-when-convenient",
@@ -137,40 +140,74 @@ def _detail(d: Discrepancy) -> str:
 
 # ---------- the whole run ----------
 
+def _noop(*_a, **_k):
+    pass
+
+
 def run(images: dict[str, list[tuple[bytes, str]]] | None = None, *, kitchen: dict | None = None,
-        tf: TokenFactory | None = None, norm: Normaliser | None = None) -> dict:
-    """Either real photos (images) or a recorded kitchen fixture. Returns the full result for the UI."""
+        tf: TokenFactory | None = None, norm: Normaliser | None = None, progress=_noop) -> dict:
+    """Either real photos (images) or a recorded kitchen fixture. Returns the full result for the UI.
+    progress(step, status, info) is called as each step starts and ends (used for the live progress rail)."""
     tf = tf or TokenFactory(meter=Meter())
     norm = norm or Normaliser()
     live = tf.live and images is not None
     if live:
-        rows = {g: extract(tf, g, images.get(g, [])) for g in GROUPS}
+        def one(g):  # the three photo groups are read in parallel
+            if not images.get(g):
+                progress(f"extract:{g}", "skipped", {})
+                return g, []
+            t0 = time.time()
+            progress(f"extract:{g}", "running", {"model": MODELS["vl"], "photos": len(images[g])})
+            out = extract(tf, g, images[g])
+            progress(f"extract:{g}", "done", {"items": len(out), "ms": int((time.time() - t0) * 1000)})
+            return g, out
+        with ThreadPoolExecutor(3) as ex:
+            rows = dict(ex.map(one, GROUPS))
     else:
         rows = recorded_extraction(kitchen or load_kitchens()[0])
-    return finish(rows, tf, norm, recorded=not live)
+        for g in GROUPS:
+            progress(f"extract:{g}", "done", {"items": len(rows[g]), "recorded": True})
+    return finish(rows, tf, norm, recorded=not live, progress=progress)
 
 
-def finish(rows: dict[str, list[dict]], tf: TokenFactory, norm: Normaliser, *, recorded: bool) -> dict:
+def finish(rows: dict[str, list[dict]], tf: TokenFactory, norm: Normaliser, *, recorded: bool, progress=_noop) -> dict:
     """Everything after extraction. Also used when the carer edits a row and re-runs."""
+    t0 = time.time()
+    progress("normalise", "running", {})
     letter, house, sources = to_items(rows, norm)
+    progress("normalise", "done", {"confirmed": sum(1 for s in sources.values() if s.get("confirmed")), "total": len(sources),
+                                   "ms": int((time.time() - t0) * 1000)})
+    t0 = time.time()
     diffs = reconcile(letter, house)
+    progress("compare", "done", {"discrepancies": len(diffs), "ms": int((time.time() - t0) * 1000)})
+    t0 = time.time()
+    progress("interpret", "running", {"model": MODELS["reason"]} if tf.live else {"recorded": True})
     interp = interpret(tf, letter, house, diffs) if tf.live else recorded_interpretation(diffs)
-    by_index = {c["index"]: c for c in interp.get("cards", [])}
-    cards = []
+    progress("interpret", "done", {"cards": len(interp.get("cards", [])), "audit": len(interp.get("letter_audit", [])),
+                                   "ms": int((time.time() - t0) * 1000), **({} if tf.live else {"recorded": True})})
+    by_index = {c["index"]: c for c in interp.get("cards", []) if isinstance(c, dict) and isinstance(c.get("index"), int)}
+    drafts = []
     for i, d in enumerate(diffs):
-        c = by_index.get(i) or {"headline": headline(d), "detail": _detail(d), "question": fallback_question(d), "severity": SEVERITY[d.type]}
-        q, rewritten = guard(c["question"], tf, step="guard")
-        h, _ = guard(c["headline"], tf, step="guard")
-        cards.append({"type": d.type, "ingredient": d.ingredient, "severity": c.get("severity", SEVERITY[d.type]),
+        c = by_index.get(i) or {}
+        drafts.append({"headline": c.get("headline") or headline(d), "detail": c.get("detail") or _detail(d),
+                       "question": c.get("question") or fallback_question(d),
+                       "severity": c.get("severity") if c.get("severity") in ORDER else SEVERITY[d.type]})
+    t0 = time.time()
+    progress("guard", "running", {"model": MODELS["fast"], "sentences": 2 * len(drafts)} if tf.live else {"recorded": True})
+    texts = [x for c in drafts for x in (c["question"], c["headline"])] + [a.get("question", "") for a in interp.get("letter_audit", [])]
+    with ThreadPoolExecutor(8) as ex:  # every sentence is checked in parallel
+        guarded = list(ex.map(lambda t: guard(t, tf, step="guard"), texts))
+    progress("guard", "done", {"rewritten": sum(1 for _, r in guarded if r), "ms": int((time.time() - t0) * 1000),
+                               **({} if tf.live else {"recorded": True})})
+    cards = []
+    for i, (d, c) in enumerate(zip(diffs, drafts)):
+        (q, rewritten), (h, _) = guarded[2 * i], guarded[2 * i + 1]
+        cards.append({"type": d.type, "ingredient": d.ingredient, "severity": c["severity"],
                       "headline": h, "detail": c["detail"], "question": q, "guard_rewrote": rewritten,
                       "letter_ids": [l.id for l in d.letter], "found_ids": [x.id for x in d.items],
                       "sources": {x.id: sources.get(x.id) for x in d.items if sources.get(x.id)}})
-    audit = []
-    for a in interp.get("letter_audit", []):
-        q, _ = guard(a.get("question", ""), tf, step="guard")
-        audit.append({**a, "question": q})
-    order = {"check-today": 0, "ask-when-convenient": 1, "info": 2}
-    cards.sort(key=lambda c: order.get(c["severity"], 3))
+    audit = [{**a, "question": guarded[2 * len(drafts) + j][0]} for j, a in enumerate(interp.get("letter_audit", []))]
+    cards.sort(key=lambda c: ORDER.get(c["severity"], 3))
     return {
         "recorded": recorded,
         "rows": {g: [{k: v for k, v in r.items() if not k.startswith("_")} for r in rows[g]] for g in GROUPS},

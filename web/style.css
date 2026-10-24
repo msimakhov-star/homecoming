@@ -60,6 +60,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid color-mix(in srgb
 .rail li.active .dot { background: var(--accent); animation: pulse 1s infinite; }
 .rail li.done { color: var(--ink); }
 .rail li.done .dot { background: var(--accent); }
+.rail .info { color: var(--muted); font-size: .8rem; font-weight: 400; }
 .rail .model { margin-left: auto; font-size: .75rem; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 @keyframes pulse { 50% { transform: scale(1.5); opacity: .5; } }
 
