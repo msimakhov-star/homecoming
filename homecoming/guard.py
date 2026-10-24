@@ -14,7 +14,12 @@ from .prompts import GUARD_SCHEMA, GUARD_SYSTEM
 _ADVICE = re.compile(
     r"\b(you|he|she|they|your (?:father|mother|dad|mum|parent)|dad|mum)\s+(should|must|need to|needs to|can|could|may)\s+"
     r"(?:now\s+|also\s+)?(stop|start|take|skip|hold|withhold|double|halve|increase|reduce|lower|raise|continue|restart|swap|switch|use)\b"
-    r"|^(?:please\s+)?(stop|start|take|skip|give|withhold|double|halve|increase|reduce|discontinue|resume|restart)\b"
+    r"|^(?:please\s+)?(stop|start|take|skip|give|withhold|double|halve|increase|reduce|discontinue|resume|restart|keep|carry on|"
+    r"discard|throw|bin|dispose|remove|swap|switch|replace|refill|crush|split|cut)\b"
+    r"|\b(keep|carry on|continue)\s+(taking|giving|using)\b"
+    r"|\b(throw|bin|discard|dispose of)\b.{0,30}\b(box|boxes|tablets?|capsules?|pills?|medicine|it|them)\b"
+    r"|\byou\s+(can|could|may)\s+(still\s+)?(use|give|take|keep)\b"
+    r"|\bjust\s+(take|give|use)\b"
     r"|\b(do not|don't|never)\s+(take|give|stop|skip|mix|combine)\b"
     r"|\b(is|are|it's|it is)\s+(safe|unsafe|dangerous|fine|ok|okay)\s+to\b"
     r"|\b(interact|interaction|overdose|contraindicat)",

@@ -58,3 +58,14 @@ def test_live_rxnorm_when_network_allowed():
     assert n.resolve("Paracetamol 500 mg")["ingredient"] == "acetaminophen"      # UK name mapped
     assert n.resolve("Co-codamol 30/500")["confirmed"] is False                   # must never fuzzy-match a wrong drug
     assert n.resolve("Losec 20mg")["confirmed"] is False                          # UK brand: needs the Tavily fallback
+
+
+def test_guard_catches_common_advice_phrasings_without_false_alarms():
+    bad = ["Give him the ramipril 5 mg as normal.", "Keep taking the atorvastatin.", "Discard the old amlodipine box.",
+           "Throw away the 2.5 mg capsules.", "You can still use the old box, just take two.", "He should continue the furosemide.",
+           "Remove amlodipine from the organiser.", "It is fine to give both.", "Skip tonight's dose."]
+    ok = ["The letter says STOP amlodipine, but a box of it is in the house", "Should he keep taking the atorvastatin?",
+          "Two boxes with different names both contain atorvastatin", "Letter adds bisoprolol, but no box of it was found",
+          "Paracetamol is in the house but the letter does not mention it"]
+    assert [t for t in bad if not violates(t)] == []
+    assert [t for t in ok if violates(t)] == []
