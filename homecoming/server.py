@@ -22,7 +22,8 @@ from . import pipeline
 from .llm import Meter, TokenFactory
 from .normalise import Normaliser
 
-MAX_IMAGES, MAX_IMAGE_BYTES = 8, 6 * 1024 * 1024
+MAX_IMAGES, MAX_IMAGE_BYTES = 16, 6 * 1024 * 1024
+MAX_VIDEO_BYTES = 20 * 1024 * 1024
 PER_IP_PER_HOUR = int(os.environ.get("PER_IP_PER_HOUR", "12"))
 DAILY_BUDGET_USD = float(os.environ.get("DAILY_BUDGET_USD", "2.0"))
 
@@ -88,7 +89,15 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
             raise HTTPException(404)
         return FileResponse(p, media_type="image/png")
 
-    async def read_uploads(letter, boxes, organiser) -> dict:
+    async def read_video(walkthrough) -> tuple[bytes, str] | None:
+        if walkthrough is None or not getattr(walkthrough, "filename", ""):
+            return None
+        data = await walkthrough.read()
+        if len(data) > MAX_VIDEO_BYTES:
+            return None  # too big to send whole: the frames the browser extracted are used instead
+        return data, walkthrough.content_type or "video/mp4"
+
+    async def read_uploads(letter, boxes, organiser, has_video: bool = False) -> dict:
         files = {"letter": letter, "boxes": boxes, "organiser": organiser}
         if sum(len(v) for v in files.values()) > MAX_IMAGES:
             raise HTTPException(413, f"at most {MAX_IMAGES} photos")
@@ -100,11 +109,11 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
                 if len(data) > MAX_IMAGE_BYTES:
                     raise HTTPException(413, "each photo must be under 6 MB")
                 images[g].append((data, u.content_type or "image/jpeg"))
-        if not images["letter"] or not images["boxes"]:
-            raise HTTPException(400, "need at least one letter photo and one photo of the boxes")
+        if not images["letter"] or not (images["boxes"] or has_video):
+            raise HTTPException(400, "need at least one letter photo and one photo or video of the boxes")
         return images
 
-    def execute(request: Request, sample: int | None, images: dict | None, progress=pipeline._noop) -> dict:
+    def execute(request: Request, sample: int | None, images: dict | None, progress=pipeline._noop, video=None) -> dict:
         """Shared by /api/run and /api/run-stream. Never raises for model failures: degrades to a recorded kitchen."""
         tf = TokenFactory(meter=Meter())
         norm = Normaliser(cache=KV())
@@ -126,7 +135,7 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
         reason = throttle(request) or (None if tf.live else "no model key is configured on this server")
         if reason is None:
             try:
-                res = pipeline.run(images, tf=tf, norm=norm, progress=progress)
+                res = pipeline.run(images, tf=tf, norm=norm, progress=progress, video=video)
                 record_spend(res["cost"]["total_usd"])
                 return res
             except Exception as e:  # a model outage must degrade, not go dark
@@ -139,22 +148,26 @@ def build(state, web_dir: Path, samples_dir: Path) -> FastAPI:
 
     @api.post("/api/run")
     async def run(request: Request, sample: int | None = Form(None),
-                  letter: list[UploadFile] = File([]), boxes: list[UploadFile] = File([]), organiser: list[UploadFile] = File([])):
-        images = None if sample is not None else await read_uploads(letter, boxes, organiser)
-        return await asyncio.to_thread(execute, request, sample, images)
+                  letter: list[UploadFile] = File([]), boxes: list[UploadFile] = File([]), organiser: list[UploadFile] = File([]),
+                  walkthrough: UploadFile | None = File(None)):
+        video = None if sample is not None else await read_video(walkthrough)
+        images = None if sample is not None else await read_uploads(letter, boxes, organiser, video is not None)
+        return await asyncio.to_thread(execute, request, sample, images, pipeline._noop, video)
 
     @api.post("/api/run-stream")
     async def run_stream(request: Request, sample: int | None = Form(None),
-                         letter: list[UploadFile] = File([]), boxes: list[UploadFile] = File([]), organiser: list[UploadFile] = File([])):
+                         letter: list[UploadFile] = File([]), boxes: list[UploadFile] = File([]), organiser: list[UploadFile] = File([]),
+                         walkthrough: UploadFile | None = File(None)):
         """Server-sent events: one {"step","status",...} event per pipeline step, then {"result": ...}."""
-        images = None if sample is not None else await read_uploads(letter, boxes, organiser)
+        video = None if sample is not None else await read_video(walkthrough)
+        images = None if sample is not None else await read_uploads(letter, boxes, organiser, video is not None)
         loop = asyncio.get_running_loop()
         q: asyncio.Queue = asyncio.Queue()
         emit = lambda step, status, info: loop.call_soon_threadsafe(q.put_nowait, {"step": step, "status": status, **info})
 
         async def worker():
             try:
-                res = await asyncio.to_thread(execute, request, sample, images, emit)
+                res = await asyncio.to_thread(execute, request, sample, images, emit, video)
                 await q.put({"result": res})
             except Exception as e:
                 await q.put({"error": f"{type(e).__name__}: {e}"[:300]})

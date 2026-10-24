@@ -10,9 +10,9 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from .diff import Discrepancy, HouseItem, LetterItem, fallback_question, headline, label, reconcile
+from .diff import Discrepancy, HouseItem, LetterItem, fallback_question, headline, label, reconcile, strength_key
 from .guard import guard
-from .llm import MODELS, Meter, TokenFactory, image_part
+from .llm import MODELS, Meter, TokenFactory, image_part, video_part
 from .normalise import Normaliser, base_name
 from .prompts import EXTRACT_PROMPTS, EXTRACT_SCHEMA, INTERPRET_SCHEMA, INTERPRET_SYSTEM, ASK_SYSTEM
 
@@ -31,19 +31,46 @@ def load_kitchens() -> list[dict]:
 
 # ---------- step 1: extraction ----------
 
-def extract(tf: TokenFactory, group: str, images: list[tuple[bytes, str]]) -> list[dict]:
-    """One VL call per photo. Returns rows with ids L1.., B1.., O1.. and the photo index they came from."""
+def extract(tf: TokenFactory, group: str, images: list[tuple[bytes, str]], video: tuple[bytes, str] | None = None) -> list[dict]:
+    """One VL call per photo (or one call for a walkthrough video). Rows get ids L1.., B1.., O1.., the photo
+    they came from, and identical items seen in several photos or video frames are merged in code."""
     prefix = {"letter": "L", "boxes": "B", "organiser": "O"}[group]
+    raw: list[dict] = []
+    if video is not None:
+        try:  # Super VL lists video as an input modality; the request shape is not documented, so frames are the fallback
+            out = tf.chat_json(MODELS["vl"], [{"role": "user", "content": [
+                {"type": "text", "text": EXTRACT_PROMPTS[group] + VIDEO_HINT}, video_part(*video)]}],
+                EXTRACT_SCHEMA, step=f"extract:{group}:video", max_tokens=3072)
+            raw = [{**it, "photo": 0, "cell": 0, "via": "video"} for it in out.get("items", [])]
+        except Exception:
+            raw = []
+    if not raw:
+        def read(idx_img):
+            idx, (data, mime) = idx_img
+            out = tf.chat_json(MODELS["vl"], [{"role": "user", "content": [
+                {"type": "text", "text": EXTRACT_PROMPTS[group]}, image_part(data, mime)]}],
+                EXTRACT_SCHEMA, step=f"extract:{group}", max_tokens=2048)
+            return [{**it, "photo": idx} for it in out.get("items", [])]
+        with ThreadPoolExecutor(4) as ex:
+            raw = [it for part in ex.map(read, enumerate(images)) for it in part]
     rows: list[dict] = []
-    for photo_idx, (data, mime) in enumerate(images):
-        out = tf.chat_json(MODELS["vl"], [{"role": "user", "content": [
-            {"type": "text", "text": EXTRACT_PROMPTS[group]}, image_part(data, mime)]}],
-            EXTRACT_SCHEMA, step=f"extract:{group}", max_tokens=2048)
-        for it in out.get("items", []):
-            if not it.get("name_as_printed") and not it.get("slot"):
-                continue
-            rows.append({**it, "id": f"{prefix}{len(rows) + 1}", "photo": photo_idx, "group": group})
+    seen: dict[tuple, dict] = {}
+    for it in raw:
+        if not it.get("name_as_printed") and not it.get("slot"):
+            continue
+        key = (base_name(it.get("name_as_printed", "")), strength_key(it.get("strength")), (it.get("slot") or "").lower(),
+               it.get("action") if group == "letter" else "")
+        if group != "letter" and key in seen:  # the same box filmed or photographed twice
+            seen[key].setdefault("also_in", []).append(it["photo"])
+            continue
+        row = {**it, "id": f"{prefix}{len(rows) + 1}", "group": group}
+        rows.append(row)
+        seen[key] = row
     return rows
+
+
+VIDEO_HINT = (" This is a short video panning across the table. List each DISTINCT item once, even if it appears "
+              "in many frames. Set cell to 0.")
 
 
 def recorded_extraction(kitchen: dict) -> dict[str, list[dict]]:
@@ -145,7 +172,8 @@ def _noop(*_a, **_k):
 
 
 def run(images: dict[str, list[tuple[bytes, str]]] | None = None, *, kitchen: dict | None = None,
-        tf: TokenFactory | None = None, norm: Normaliser | None = None, progress=_noop) -> dict:
+        tf: TokenFactory | None = None, norm: Normaliser | None = None, progress=_noop,
+        video: tuple[bytes, str] | None = None) -> dict:
     """Either real photos (images) or a recorded kitchen fixture. Returns the full result for the UI.
     progress(step, status, info) is called as each step starts and ends (used for the live progress rail)."""
     tf = tf or TokenFactory(meter=Meter())
@@ -153,12 +181,13 @@ def run(images: dict[str, list[tuple[bytes, str]]] | None = None, *, kitchen: di
     live = tf.live and images is not None
     if live:
         def one(g):  # the three photo groups are read in parallel
-            if not images.get(g):
+            vid = video if g == "boxes" else None
+            if not images.get(g) and vid is None:
                 progress(f"extract:{g}", "skipped", {})
                 return g, []
             t0 = time.time()
-            progress(f"extract:{g}", "running", {"model": MODELS["vl"], "photos": len(images[g])})
-            out = extract(tf, g, images[g])
+            progress(f"extract:{g}", "running", {"model": MODELS["vl"], "photos": len(images.get(g, [])), "video": vid is not None})
+            out = extract(tf, g, images.get(g, []), vid)
             progress(f"extract:{g}", "done", {"items": len(out), "ms": int((time.time() - t0) * 1000)})
             return g, out
         with ThreadPoolExecutor(3) as ex:

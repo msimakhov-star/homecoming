@@ -1,6 +1,6 @@
 /* Homecoming front end: no framework, no build step. */
 const $ = (s, el = document) => el.querySelector(s);
-const state = { files: { letter: [], boxes: [], organiser: [] }, photos: { letter: [], boxes: [], organiser: [] }, sample: null, result: null, rows: null };
+const state = { files: { letter: [], boxes: [], organiser: [] }, photos: { letter: [], boxes: [], organiser: [] }, video: null, sample: null, result: null, rows: null };
 
 const STEPS = [
   ['extract:letter', 'Reading the discharge letter', 'Nemotron 3.5 Super VL'],
@@ -19,13 +19,59 @@ function toast(msg, ms = 3500) {
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 /* ---------- capture ---------- */
-document.querySelectorAll('.tile input').forEach(inp => inp.addEventListener('change', () => {
+document.querySelectorAll('.tile input').forEach(inp => inp.addEventListener('change', async () => {
   const g = inp.dataset.group;
-  state.files[g] = [...inp.files];
-  state.photos[g] = state.files[g].map(f => URL.createObjectURL(f));
+  const picked = [...inp.files];
+  const vid = picked.find(f => f.type.startsWith('video/'));
+  let files = picked.filter(f => f.type.startsWith('image/'));
+  if (g === 'boxes') state.video = vid || null;
+  if (vid) {
+    toast('Taking the sharpest frames from your video…');
+    try { files = files.concat(await videoFrames(vid, 6)); } catch (e) { toast('Could not read that video; please add photos instead.'); }
+  }
+  state.files[g] = files;
+  state.photos[g] = files.map(f => URL.createObjectURL(f));
   state.sample = null; syncSamples();
   renderThumbs(g);
 }));
+
+/* Pull n evenly spaced frames from a phone video, keeping the sharpest of three nearby candidates each time
+   (sharpness = mean absolute Laplacian on a small greyscale copy). Frames are sent like photos, so the app
+   works even where the model's native video input is unavailable. */
+async function videoFrames(file, n) {
+  const v = document.createElement('video');
+  v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = URL.createObjectURL(file);
+  await new Promise((ok, bad) => { v.onloadedmetadata = ok; v.onerror = bad; });
+  const seek = t => new Promise(ok => { v.onseeked = ok; v.currentTime = Math.min(Math.max(t, 0), v.duration - 0.05); });
+  const big = document.createElement('canvas'), small = document.createElement('canvas');
+  const scale = Math.min(1, 1600 / Math.max(v.videoWidth, v.videoHeight));
+  big.width = Math.round(v.videoWidth * scale); big.height = Math.round(v.videoHeight * scale);
+  small.width = 160; small.height = Math.round(160 * v.videoHeight / v.videoWidth);
+  const sharpness = () => {
+    const c = small.getContext('2d', { willReadFrequently: true }); c.drawImage(v, 0, 0, small.width, small.height);
+    const d = c.getImageData(0, 0, small.width, small.height).data, w = small.width; let sum = 0;
+    const g = i => d[i * 4] * 0.3 + d[i * 4 + 1] * 0.59 + d[i * 4 + 2] * 0.11;
+    for (let y = 1; y < small.height - 1; y++) for (let x = 1; x < w - 1; x++) {
+      const i = y * w + x; sum += Math.abs(4 * g(i) - g(i - 1) - g(i + 1) - g(i - w) - g(i + w));
+    }
+    return sum;
+  };
+  const out = [], step = v.duration / n;
+  for (let k = 0; k < n; k++) {
+    let best = null;
+    for (const off of [-0.25, 0, 0.25]) {
+      await seek(step * (k + 0.5) + off * step);
+      const s = sharpness();
+      if (!best || s > best.s) { best = { s, t: v.currentTime }; }
+    }
+    await seek(best.t);
+    big.getContext('2d').drawImage(v, 0, 0, big.width, big.height);
+    const blob = await new Promise(ok => big.toBlob(ok, 'image/jpeg', 0.88));
+    out.push(new File([blob], `frame${k + 1}.jpg`, { type: 'image/jpeg' }));
+  }
+  URL.revokeObjectURL(v.src);
+  return out;
+}
 function renderThumbs(g) {
   $(`[data-thumbs="${g}"]`).innerHTML = state.photos[g].map(u => `<img src="${u}" alt="">`).join('');
 }
@@ -52,7 +98,10 @@ $('#run').addEventListener('click', async () => {
   const fd = () => {
     const f = new FormData();
     if (state.sample !== null) f.append('sample', state.sample);
-    else for (const g of ['letter', 'boxes', 'organiser']) state.files[g].forEach(x => f.append(g, x, x.name));
+    else {
+      for (const g of ['letter', 'boxes', 'organiser']) state.files[g].forEach(x => f.append(g, x, x.name));
+      if (state.video && state.video.size < 20 * 1024 * 1024) f.append('walkthrough', state.video, state.video.name);
+    }
     return f;
   };
   startRail(); $('#run').disabled = true; $('#results').hidden = true;

@@ -130,3 +130,9 @@ def image_part(data: bytes, mime: str = "image/jpeg") -> dict:
     import base64
     data, mime = shrink(data, mime)
     return {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{base64.b64encode(data).decode()}"}}
+
+
+def video_part(data: bytes, mime: str = "video/mp4") -> dict:
+    """OpenAI/vLLM-style video content part. UNVERIFIED on Token Factory: callers must fall back to frames."""
+    import base64
+    return {"type": "video_url", "video_url": {"url": f"data:{mime};base64,{base64.b64encode(data).decode()}"}}

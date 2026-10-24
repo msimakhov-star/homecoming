@@ -36,6 +36,9 @@ class Fake(BaseHTTPRequestHandler):
     def do_POST(self):
         body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
         SEEN.append(body)
+        parts = body["messages"][0]["content"] if isinstance(body["messages"][0]["content"], list) else []
+        if any(p.get("type") == "video_url" for p in parts):
+            return self._send(400, {"error": "video input not supported in this test"})
         rf = body.get("response_format", {}).get("json_schema", {})
         if isinstance(rf, dict) and "name" in rf and "schema" in rf:
             return self._send(400, {"error": "json_schema must be a JSON Schema"})
@@ -88,3 +91,22 @@ def test_live_pipeline_against_fake_token_factory(monkeypatch):
     # photos were sent as JPEG data URIs after shrinking
     first_vl = next(b for b in SEEN if b["model"] == llm.MODELS["vl"])
     assert first_vl["messages"][0]["content"][1]["image_url"]["url"].startswith("data:image/jpeg;base64,")
+
+
+def test_video_walkthrough_falls_back_to_frames_and_dedupes(monkeypatch):
+    srv = HTTPServer(("127.0.0.1", 0), Fake)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    monkeypatch.setattr(llm, "BASE_URL", f"http://127.0.0.1:{srv.server_port}/v1")
+    try:
+        tf = TokenFactory(api_key="test", meter=Meter())
+        norm = Normaliser(cache={}, tavily_key=None, rxnorm=lambda s: [])
+        box = ((ROOT / "data/samples/kitchen0-boxes.png").read_bytes(), "image/png")
+        imgs = {"letter": [((ROOT / "data/samples/kitchen0-letter.png").read_bytes(), "image/png")],
+                "boxes": [box, box, box],  # three "frames" showing the same boxes
+                "organiser": [((ROOT / "data/samples/kitchen0-organiser.png").read_bytes(), "image/png")]}
+        res = pipeline.run(imgs, tf=tf, norm=norm, video=(b"fake-mp4", "video/mp4"))
+    finally:
+        srv.shutdown()
+    names = [r["name_as_printed"] for r in res["rows"]["boxes"]]
+    assert len(names) == len(set(names)) == 5, names          # merged across frames
+    assert sorted({c["type"] for c in res["cards"]}) == sorted(K["expected"])
